@@ -1,3 +1,15 @@
+## Info
+
+A **main** branch tartalmazza az angular alkalmazás forrását. Módosítás után az `ng build --base-href /akciok/` paranccsal megy a build, ami a dist alá pakol egy akciok alkönyvtárba.
+  `git add .`
+  `git commit -m "valami üzenet"`
+  `git push -u origin main`
+A **gh-pages** branch tartalmazza a futattandó lebuildelt cuccot. Ez egy másik file lokációra van kiklónozva. A dist alól ide kell másolni a dolgokat, majd
+  `git add .`
+  `git commit -m "valami üzenet"`
+  `git push --set-upstream origin gh-pages`
+
+## Emlékeztető
 Az app futtatásához létre lett hozva egy új akciok nevű git repo.
 https://github.com/balagex/akciok
 
@@ -20,3 +32,4 @@ Alapvetően a https://www.youtube.com/watch?v=F3HbnbT1Maw videó alapján mentek
 - Az új branchre már másik push parancs volt:
   `git push --set-upstream origin gh-pages`
 - A gitlab oldalán pedig a *repo settings / Pages / Build and deployment* alatt be lett állítva, hogy "Deploy from a branch", valamint a gh-pages /docs és Save. Ekkor commit után idővel indul a deploy és itt megnézhető a végeredmény: https://balagex.github.io/akciok/
+- Végül át lett variálva úgy az egész, hogy a **main** branchbe be lett megrelve az aktuális kód, és az alól ki lett törölve a docs könyvtár. A **gh-pages** branch egy új lokációra ki lett klónozva, majd minden kitörölve, végül pedig a dist alá fordított cucc idemásolva, és az feltolva a repo-ba. A *repo settings / Pages / Build and deployment* alatt is módosítani kellett a /docs-ról /root-ra.
