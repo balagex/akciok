@@ -13,7 +13,7 @@ Alapvetően a https://www.youtube.com/watch?v=F3HbnbT1Maw videó alapján mentek
 - Be kellett még állítani a git user paramétereket a 
   `git config --local user.email "csongebalazs@gmail.com"`
   `git config --local user.name "balagex"`
-- A vgit config credential.helper store` parancs kiadása kellett a video alapján, majd a következő vgit push -u origin main` esetén a tokent kellett megadni a jelszó helyett.
+- A `git config credential.helper store` parancs kiadása kellett a video alapján, majd a következő `git push -u origin main` esetén a tokent kellett megadni a jelszó helyett.
 - A próbálkozások során létrehoztam egy a bevesárló listás repo alapján egy **gh-pages** nevű branch-et, ami a master tartalmával jött létre. A gépemen is átléptem erre a branchre.
   `git checkout`
   `git checkout -b gh-pages`
