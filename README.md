@@ -1,27 +1,22 @@
-# Akciok
+Az app futtatásához létre lett hozva egy új akciok nevű git repo.
+https://github.com/balagex/akciok
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+Alapvetően a https://www.youtube.com/watch?v=F3HbnbT1Maw videó alapján mentek a dolgok az alábbi megjegyzésekkel.
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- A git clone-nal itt is egy üres könyvtárba lett a repo klónozva (clone https://github.com/balagex/akciok.git), majd itt létrehozva egy új app külön alkönyvtár kreálás nélkül (ng new akciok --directory ./).
+- Ha az ng build --output-path docs --base-href /akciok/ parancsot futtatjuk, akkor az angular projekt könyvtárban egy docs könyvtár alá jön létre a dist helyett a futtatandó állomány halmaz. Az angular 17 verzió-ban azonban bekerül egy browsers nevű alfolder alá minden, ahonnan kézzel fentebb kell mozgatni a docs alá.
+- A base-ref rész azért kell, hogy az index.html-ben a base tag href attribútuma "/akciok/" értéket kapjon. Ha ezt elfelejtjük, akkor a github-os build/deploy után jöönni fog több olyan hiba, hogy pl. Loading module from “https://balagex.github.io/polyfills-RX4V3J3S.js” was blocked because of a disallowed MIME type (“text/html”)Loading module from “https://balagex.github.io/polyfills-RX4V3J3S.js” was blocked because of a disallowed MIME type (“text/html”).
+- git telepítésre került a windows-ra innen: https://git-scm.com/downloads
+- A git remote add origin https://github.com/balagex/akciok.git parancs ki lett adva a projekt könyvtárban.
+- git add . és a git commit -m "valami üzenet" parancsokkal megtörténik a local commit, de ezt még push-olni kell a repoba.
+- A videóban látott módon ez nem megy, mert már nem lehet sima jelszóval ezt tenni (Support for password authentication was removed on August 13, 2021. hiba jött), ezért egy másik videó segített abban, hogyan kell ezt egy token generálással megoldani. https://www.youtube.com/watch?v=6-FohH_jGLI
+- Be kellett még állítani a git user paramétereket a 
+  git config --local user.email "csongebalazs@gmail.com"
+  git config --local user.name "balagex"
+- A git config credential.helper store parancs kiadása kellett a video alapján, majd a következő git push -u origin main esetén a tokent kellett megadni a jelszó helyett.
+- A próbálkozások során létrehoztam egy a bevesárló listás repo alapján egy gh-pages nevű branch-et, ami a master tartalmával jött létre. A gépemen is átléptem erre a branchre.
+  git checkout
+  git checkout -b gh-pages
+- Az új branchre már másik push parancs volt:
+  git push --set-upstream origin gh-pages
+- A gitlab oldalán pedig a repo settings / Pages / Build and deployment alatt be lett állítva, hogy "Deploy from a branch", valamint a gh-pages /docs és Save. Ekkor commit után idővel indul a deploy és itt megnézhető a végeredmény: https://balagex.github.io/akciok/
