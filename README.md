@@ -1,13 +1,17 @@
 ## Info
 
 A **main** branch tartalmazza az angular alkalmazás forrását. Módosítás után az `ng build --base-href /akciok/` paranccsal megy a build, ami a dist alá pakol egy akciok alkönyvtárba.
-  `git add .`
-  `git commit -m "valami üzenet"`
-  `git push -u origin main`
+```
+  git add .
+  git commit -m "valami üzenet"
+  git push -u origin main
+```
 A **gh-pages** branch tartalmazza a futattandó lebuildelt cuccot. Ez egy másik file lokációra van kiklónozva. A dist alól ide kell másolni a dolgokat, majd
-  `git add .`
-  `git commit -m "valami üzenet"`
-  `git push --set-upstream origin gh-pages`
+```
+  git add .
+  git commit -m "valami üzenet"
+  git push --set-upstream origin gh-pages
+```
 
 ## Emlékeztető
 Az app futtatásához létre lett hozva egy új akciok nevű git repo.
