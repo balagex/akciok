@@ -1,0 +1,99 @@
+@import "../../app-colors.scss";
+
+.login-wrapper {
+    width              : 100%;
+    height             : 100%;
+    display            : flex;
+    align-items        : center;
+    justify-content    : center;
+    background-image   : url(../../../assets/login.jpg);
+    background-position: center center;
+    background-repeat  : no-repeat;
+    background-size    : cover;
+
+    .login-panel {
+        z-index            : 2;
+        display            : flex;
+        height             : 60%;
+        width              : 50%;
+        max-width          : 460px;
+        // margin          : auto;
+        background-color   : $fornax-blue;
+        align-items        : center;
+        justify-content    : center;
+        flex-direction     : column;
+        min-width          : 260px;
+        min-height         : 560px;
+
+        .login-mezo {
+            width  : 200px;
+            display: block;
+        }
+
+        .gomb {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .fej {
+            width           : 100%;
+            display         : block;
+            text-align      : center;
+            margin-bottom   : 60px;
+            background-color: $emu-dark-blue;
+            color           : white;
+            padding         : 20px 20px;
+            font-size: 30px;
+            font-weight: 600;
+            // padding: 20px 0 !important;
+        }
+
+        .cimke {
+            color      : white;
+            font-weight: 900;
+        }
+
+        .username,
+        .password {
+            width        : 200px;
+            margin-top   : 10px;
+            margin-bottom: 30px;
+        }
+
+        .bejelentkezes {
+            display            : inline-block;
+            text-align         : center;
+            padding            : 10px 20px;
+            font-weight        : 500;
+            cursor             : pointer;
+            -moz-user-select   : none;
+            -webkit-user-select: none;
+            -ms-user-select    : none;
+            user-select        : none;
+
+            color        : #ffffff;
+            background   : $emu-dark-blue;
+            border       : 1px solid $emu-extra-dark-blue;
+            font-size    : 15px;
+            transition   : background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+            border-radius: 5px;
+
+            &.disabled {
+                opacity: 0.5;
+            }
+        }
+
+    }
+
+}
+
+.login-wrapper::before {
+    content         : "";
+    position        : absolute;
+    top             : 0px;
+    right           : 0px;
+    bottom          : 0px;
+    left            : 0px;
+    background-color: rgba(0, 122, 217, 0.4);
+
+}

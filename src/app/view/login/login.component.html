@@ -1,1 +1,38 @@
-<p>login works!</p>
+<div class="login-wrapper">
+    <div class="login-panel">
+        <div class="fej">
+            Akciók
+        </div>
+        <div class="login-mezo cimke">
+            Felhasználó név
+        </div>
+        <div class="login-mezo">
+            <input class="username"
+                   autocapitalize="off"
+                   id="username"
+                   type="text"
+                   tabindex="1"
+                   [(ngModel)]="loginname" />
+        </div>
+        <div class="login-mezo cimke">
+            Jelszó
+        </div>
+        <div class="login-mezo">
+            <input class="password"
+                   id="password"
+                   type="password"
+                   tabindex="2"
+                   [(ngModel)]="password"
+                   (keypress)="keypress($event)" />
+        </div>
+        <div class="login-mezo gomb">
+            <button id="login-button"
+                    class="bejelentkezes"
+                    (click)="loginHandler()"
+                    tabindex="3"
+                    [ngClass]="{'disabled': !(loginname && password)}">
+                BEJELENTKEZÉS
+            </button>
+        </div>
+    </div>
+</div>
