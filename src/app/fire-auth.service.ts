@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserCredential, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Router } from '@angular/router';
+import { UserCredential, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,12 @@ export class FireAuthService {
     private token: string = null;
     private email: string = null;
 
-    constructor(protected httpClient: HttpClient) { }
+    constructor(protected httpClient: HttpClient, private router: Router) { }
+
+    regisztracio(email: string, password: string) {
+        const auth = getAuth();
+        return createUserWithEmailAndPassword(auth, email, password);
+    }
 
     login(email: string, password: string) {
 
@@ -36,7 +42,7 @@ export class FireAuthService {
         this.clearCredital();
         auth.signOut().then(() => {
             console.log('logout futtatva...');
-            // this.router.navigate(['/login']);
+            this.router.navigate(['/login']);
         });
 
     }
