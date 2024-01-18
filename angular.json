@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "akciok": {
+    "uj-lista": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/akciok",
+            "outputPath": "dist/uj-lista",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -30,7 +30,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+                "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+                "node_modules/primeng/resources/primeng.min.css",
+                "src/styles.scss"
             ],
             "scripts": []
           },
@@ -62,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "akciok:build:production"
+              "buildTarget": "uj-lista:build:production"
             },
             "development": {
-              "buildTarget": "akciok:build:development"
+              "buildTarget": "uj-lista:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +75,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "akciok:build"
+            "buildTarget": "uj-lista:build"
           }
         },
         "test": {
