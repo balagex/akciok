@@ -2,9 +2,12 @@
     <div class="login-panel">
         <div class="fej">
             Akciók
-        </div>
+            <!-- <div class="fej-bal"><em>&lt;A</em></div>
+            <div class="fej-kozep">Akciók</div>
+            <div class="fej-jobb"><em>B&gt;</em></div> -->
+        </div> 
         <div class="login-mezo cimke">
-            Felhasználó név
+            <span>Felhasználó név</span>
         </div>
         <div class="login-mezo">
             <input class="username"
@@ -15,7 +18,7 @@
                    [(ngModel)]="loginname" />
         </div>
         <div class="login-mezo cimke">
-            Jelszó
+            <span>Jelszó</span>
         </div>
         <div class="login-mezo">
             <input class="password"
@@ -30,9 +33,12 @@
                     class="bejelentkezes"
                     (click)="loginHandler()"
                     tabindex="3"
-                    [ngClass]="{'disabled': !(loginname && password)}">
+                    [ngClass]="{'disabled': !(loginname && password) || loading}">
                 BEJELENTKEZÉS
             </button>
+        </div>
+        <div class="login-hiba">
+            <div class="hiba" *ngIf="loginError">Hiba történt a bejelentkezés során! Próbáld újra...</div>
         </div>
     </div>
 </div>
