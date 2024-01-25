@@ -1,0 +1,37 @@
+<div class="akcio-keret">
+    <div class="keret-fej">
+        <div class="fej-bal">
+            <p-button label="<"
+                      (onClick)="balra()"></p-button>
+        </div>
+        <div class="fej-kozep">
+            FEJ FELIRAT {{ful}}
+        </div>
+        <div class="fej-jobb">
+            <p-button label=">"
+                      (onClick)="jobbra()"></p-button>
+        </div>
+    </div>
+    <div class="keret-torzs">
+        <div class="torzs-bal">
+            itt lesz a lista választó full hd esetén
+        </div>
+        <div class="torzs-kozep-max">
+            itt lesznek a kiválasztott lista akciói full hd esetén
+        </div>
+        <div class="torzs-kozep-min">
+            @if (ful < 2) {
+                <div class="kozep-lista">itt lesz a lista mobil esetén</div>
+              } 
+              @else if (ful === 2) {
+                <div class="kozep-akciok">itt lesznek a kiválasztott lista akciói</div>
+              } 
+              @else {
+                <div class="kozep-szerkesztok">itt lesz a szerkesztő mobil esetén</div>
+              }
+        </div>
+        <div class="torzs-jobb">
+            itt lesz a szerkesztő full hd esetén
+        </div>
+    </div>
+</div>
