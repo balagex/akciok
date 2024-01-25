@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { AkcioListaComponent } from '../akcio-lista/akcio-lista.component';
 
 @Component({
     selector: 'app-akcio-main',
     standalone: true,
-    imports: [ButtonModule],
+    imports: [ButtonModule, AkcioListaComponent],
     templateUrl: './akcio-main.component.html',
     styleUrl: './akcio-main.component.scss'
 })

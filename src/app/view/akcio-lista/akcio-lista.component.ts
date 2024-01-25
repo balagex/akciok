@@ -19,13 +19,24 @@ export class AkcioListaComponent {
 
     ngOnInit() {
 
-        this.testServiceService.akcioTetelekLekereseAlap(this.fireAuthService.getToken()).subscribe({
+        this.testServiceService.akciosListakLekereseAlap(this.fireAuthService.getToken()).subscribe({
             next: (valasz) => {
-                console.debug('AkcioListaComponent - Lekért lista: ', valasz);
+                console.debug('AkcioListaComponent - Lekért akciós listák: ', valasz);
 
             },
             error: (error) => {
-                console.error('AkcioListaComponent - LISTA LEKERES HIBA ', error);
+                console.error('AkcioListaComponent - AKCIÓS LISTA LEKERES HIBA ', error);
+                this.fireAuthService.logout();
+            }
+        });
+
+        this.testServiceService.akcioTetelekLekereseAlap(this.fireAuthService.getToken()).subscribe({
+            next: (valasz) => {
+                console.debug('AkcioListaComponent - Lekért akciós tételek: ', valasz);
+
+            },
+            error: (error) => {
+                console.error('AkcioListaComponent - AKCIÓS TÉTEL LEKERES HIBA ', error);
                 this.fireAuthService.logout();
             }
         });
