@@ -1,0 +1,22 @@
+.al-keret {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .al-szuro {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+        .szuro-bolt {
+            height: 55px;
+            // min-width: 80px;
+
+            img {
+                height: 50px;
+            }
+        }
+    }
+}

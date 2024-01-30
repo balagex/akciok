@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TestServiceService } from '../../test-service.service';
 import { FireAuthService } from '../../fire-auth.service';
+import { BOLTOK } from '../../common.constants';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { FireAuthService } from '../../fire-auth.service';
 export class AkcioListaComponent {
 
     loading: boolean = false;
+    // boltok = BoltAzon;
+    boltok = BOLTOK;
 
     constructor(private testServiceService: TestServiceService, private fireAuthService: FireAuthService) { }
 
@@ -49,6 +52,10 @@ export class AkcioListaComponent {
             this.loading = false;
             this.fireAuthService.logout();
         }, 2000);
+    }
+
+    boltSzuroKlikk(bolt: any): void {
+        console.debug('AkcioListaComponent - boltSzuroKlikk: ', bolt);
     }
 
 }

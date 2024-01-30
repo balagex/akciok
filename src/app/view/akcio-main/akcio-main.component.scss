@@ -14,29 +14,38 @@
         align-items: center;
         justify-content: space-between;
 
-        .fej-bal {
-            display: none;
+        .fej-bal, .fej-jobb {
+            
             background-color: blue;
+            min-width: 55px;
 
-            @media screen and (max-width: 1200px) {
-                width: 10%;
-                display: block;
+            .fej-gomb {
+                display: none;
+
+                @media screen and (max-width: 1200px) {
+                    display: block;
+                }
             }
         }
-    
-        .fej-kozep {
-            width: 70%;
-            background-color: blueviolet;
-            
-        }
-    
-        .fej-jobb {
-            display: none;
-            background-color: brown;
 
-            @media screen and (max-width: 1200px) {
-                width: 10%;
+        .fej-kozep {
+            background-color: blueviolet;
+            text-align: center;
+            
+            &.fk-min {
+                display: none;
+
+                @media screen and (max-width: 1200px) {
+                    display: block;
+                }
+            }
+        
+            &.fk-max {
                 display: block;
+
+                @media screen and (max-width: 1200px) {
+                    display: none;
+                }
             }
         }
     }

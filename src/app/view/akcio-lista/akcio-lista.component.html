@@ -1,2 +1,17 @@
-<p>akcio-lista works!</p>
-<p-button label="Submit" [loading]="loading" (onClick)="load()"></p-button>
+<div class="al-keret">
+    <div class="al-szuro">
+        @for (bolt of boltok; track bolt.order) {
+            <div class="szuro-bolt" (click)="boltSzuroKlikk(bolt)">
+                <img [src]="bolt.image">
+            </div>
+        }
+        <!-- <p *ngFor="let bolt of boltok | keyvalue">
+            {{ bolt.key }} - {{ bolt.value}}
+        </p> -->
+    </div>
+    <div class="al-torzs">
+        <p-button label="Submit"
+        [loading]="loading"
+        (onClick)="load()"></p-button>
+    </div>
+</div>
