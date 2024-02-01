@@ -23,7 +23,6 @@ export class AkcioTetel implements AkcioTetelIF {
     }
 
     constructor(tetel?: AkcioTetelIF) {
-
         if (tetel) {
             this.azon = tetel.azon;
             this.listaAzon = tetel.listaAzon;

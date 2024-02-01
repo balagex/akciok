@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     constructor(private fireAuthService: FireAuthService, private router: Router) { }
 
     ngOnInit() {
-        const most = new Date(2024, 0, 27);
+        const most = new Date(2024, 1, 2);
 
         console.log(napRovidites(most, 'hu-HU'));
         console.log(napRovidites(most, null));

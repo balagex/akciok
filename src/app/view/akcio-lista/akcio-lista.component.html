@@ -1,7 +1,7 @@
 <div class="al-keret">
     <div class="al-szuro">
         @for (bolt of boltok; track bolt.order) {
-        <div class="szuro-bolt"
+        <div class="szuro-bolt" [ngClass]="{'aktiv': boltSzuresAktiv && this.boltSzuroMap.get(bolt.id)}"
              (click)="boltSzuroKlikk(bolt)">
             <img [src]="bolt.image">
         </div>
@@ -17,12 +17,16 @@
                       (onClick)="load()"></p-button>
         </div>
         <div class="kereso-szoveg">
-            <input type="text" pInputText [ngModel]="searchTerm()" (ngModelChange)="kereses($event)" />
+            <input type="text"
+                   pInputText
+                   [(ngModel)]="keresoSzoveg" />
         </div>
     </div>
     <div class="al-torzs">
-        <p-button label="Submit"
-                  [loading]="loading"
-                  (onClick)="load()"></p-button> {{searchFor()}}
+        @for (tetel of kivalasztottListaTetelei(); track tetel.azon) {
+        <div class="törzs-bolt">
+            <span>{{tetel.boltAzon}} - {{tetel.kezdoNap}} - {{tetel.vegeNap}} - {{tetel.nev}}</span>
+        </div>
+        }
     </div>
 </div>

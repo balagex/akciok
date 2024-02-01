@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { AkcioTetelIF } from './model/akcio-tetel.interface';
 import { AkciosListaIF } from './model/akcios-lista.interface';
 import { map } from 'rxjs';
@@ -9,7 +9,11 @@ import { AkcioTetel } from './model/akcio-tetel.type';
 @Injectable({
     providedIn: 'root'
 })
-export class TestServiceService {
+export class AdatServiceService {
+
+    public akciosListakLista = signal<AkciosLista[]>([]);
+    public kivalasztottLista = signal<AkciosLista>(null);
+    public akciosTetelLista = signal<AkcioTetel[]>([]);
 
     constructor(protected httpClient: HttpClient) { }
 
@@ -25,5 +29,15 @@ export class TestServiceService {
             observe: 'body',
             responseType: 'json'
         }).pipe(map(response => AkcioTetel.convertFromIfList(response)));
+    }
+
+    aktulaisHetKivalasztasa(): void {
+        const most = new Date();
+        const ezAHet = this.akciosListakLista().find(value => value.kezdoNap <= most && value.vegeNap >= most);
+        if (ezAHet) {
+            this.kivalasztottLista.set(ezAHet);
+
+        }
+        console.debug('AdatServiceService - aktulaisHetKivalasztasa: ', this.kivalasztottLista());
     }
 }
