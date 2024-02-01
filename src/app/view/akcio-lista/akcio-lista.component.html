@@ -1,7 +1,8 @@
 <div class="al-keret">
     <div class="al-szuro">
         @for (bolt of boltok; track bolt.order) {
-        <div class="szuro-bolt" [ngClass]="{'aktiv': boltSzuresAktiv && this.boltSzuroMap.get(bolt.id)}"
+        <div class="szuro-bolt"
+             [ngClass]="{'aktiv': boltSzuro().length > 0 && ezKijeloltBolt(bolt), 'halvany': boltSzuro().length > 0 && !ezKijeloltBolt(bolt)}"
              (click)="boltSzuroKlikk(bolt)">
             <img [src]="bolt.image">
         </div>
@@ -12,14 +13,22 @@
     </div>
     <div class="al-kereso">
         <div class="kereso-gomb">
-            <p-button label="Submit"
-                      [loading]="loading"
-                      (onClick)="load()"></p-button>
+            <p-button [loading]="loading"
+                      size="small"
+                      [label]="keresoGombSzoveg()"
+                      (onClick)="rotalas()"></p-button>
         </div>
         <div class="kereso-szoveg">
             <input type="text"
                    pInputText
-                   [(ngModel)]="keresoSzoveg" />
+                   [ngModel]="szuroSzoveg()"
+                   (ngModelChange)="szuroSzoveg.set($event)" />
+        </div>
+        <div class="kereso-torlo">
+            <p-button icon="pi pi-search-minus"
+                      severity="danger"
+                      (onClick)="szuroTorles()"
+                      [ngClass]="{'rejtett': boltSzuro().length == 0 && szuroSzoveg().length == 0}"></p-button>
         </div>
     </div>
     <div class="al-torzs">

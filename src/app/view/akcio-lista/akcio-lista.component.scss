@@ -13,26 +13,58 @@
         .szuro-bolt {
             height: 55px;
             // min-width: 80px;
+            border: 2px white solid;
+            background-color: white;
+            position: relative;
+            box-sizing: border-box;
+            line-height: 0px;
 
+            &.aktiv {
+                border: 2px red solid;
+                background-color: red;
+            }
+
+            &.halvany::after {
+                content: "";
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+                left: 0px;
+                background-color: white;
+                opacity: 0.3;
+            }
+    
             img {
-                height: 50px;
+                max-height: 50px;
             }
         }
+
     }
 
     .al-kereso {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-around;
-
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
 
         .kereso-gomb {
             max-width: 30%;
+            min-width: 76px;
         }
 
         .kereso-szoveg {
             max-width: 65%;
         }
+
+        .kereso-torlo {
+            min-width: 50px;
+        }
+    }
+
+    .rejtett {
+        display: none;
     }
 }

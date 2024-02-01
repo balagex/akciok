@@ -158,7 +158,9 @@
     bottom: 0px;
     left: 0px;
     // background-color: rgba(0, 122, 217, 0.4);
-    background-color: rgba(241, 38, 73, 0.1);
+    // background-color: rgba(241, 38, 73, 0.1);
+    background: linear-gradient(45deg, red, blue);
+    opacity: 0.4;
     z-index: -1;
 
 }

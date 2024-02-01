@@ -3,7 +3,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { BOLTOK } from '../../common.constants';
-import { Component, computed, effect } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
@@ -25,20 +25,12 @@ export class AkcioListaComponent {
     // boltok = BoltAzon;
     boltok = BOLTOK;
 
+    keresoGombSzoveg = signal<'Mind' | 'Mai' | 'Lehet'>('Mind');
+    boltSzuro = signal<BoltAzon[]>([]);
+    szuroSzoveg = signal<string>('');
+
     // BOLTOK - IDŐSZAKOK - tétel lista
     public tetelAdatok: Map<string, Map<string, AkcioTetel[]>> = new Map<string, Map<string, AkcioTetel[]>>();
-
-    public boltSzuroMap: Map<BoltAzon, boolean> = new Map<BoltAzon, boolean>([
-        [BoltAzon.LIDL, false],
-        [BoltAzon.ALDI, false],
-        [BoltAzon.SPAR, false],
-        [BoltAzon.PENNY, false],
-        [BoltAzon.TESCO, false],
-        [BoltAzon.AUCHAN, false],
-        [BoltAzon.EGYEB, false]
-    ]);
-
-    public boltSzuresAktiv: boolean = false;
 
     akciosListakLista: AkciosLista[] = [];
     kivalasztottAkciosLista: AkciosLista = null;
@@ -60,10 +52,16 @@ export class AkcioListaComponent {
     kivalasztottListaTetelei = computed<AkcioTetel[]>(() => {
         const kivalasztottLista = this.adatServiceService.kivalasztottLista();
         const fullLista = this.adatServiceService.akciosTetelLista();
+        const keresesiIdo = this.keresoGombSzoveg();
+        const boltSzuro = this.boltSzuro();
+        const szuroSzoveg = this.szuroSzoveg();
+
         // console.debug('AkcioListaComponent - kivalasztottListaTetelei ', kivalasztottLista, fullLista);
         if (kivalasztottLista && fullLista && fullLista.length > 0) {
-            let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon);
-            console.debug('AkcioListaComponent - heti lista ', hetiLista);
+            let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon &&
+                (this.boltSzuro().length === 0 || (this.boltSzuro().findIndex(sz => sz == tetel.boltAzon) > -1)) &&
+                (szuroSzoveg.length < 1 || (tetel.nev.indexOf(szuroSzoveg) > -1)));
+            console.debug('AkcioListaComponent - heti lista ', hetiLista, keresesiIdo, boltSzuro, szuroSzoveg);
             return hetiLista;
         } else {
             return [];
@@ -94,16 +92,36 @@ export class AkcioListaComponent {
     }
 
     boltSzuroKlikk(bolt: any): void {
-        const boltSzuroErtek: boolean = this.boltSzuroMap.get(bolt.id);
-        this.boltSzuroMap.set(bolt.id, !boltSzuroErtek);
-        let vanBepipaltSzures = false;
-        this.boltSzuroMap.forEach(value => {
-            if (value) {
-                vanBepipaltSzures = true;
-            }
-        });
-        this.boltSzuresAktiv = vanBepipaltSzures;
-        console.debug('AkcioListaComponent - boltSzuroKlikk: ', bolt, this.boltSzuroMap, this.boltSzuresAktiv, this.kivalasztottListaTetelei());
+        console.debug('AkcioListaComponent - boltSzuroKlikk: ', bolt);
+        const boltSzuro = this.boltSzuro();
+        if (boltSzuro.indexOf(bolt.id) > -1) {
+            const ujLista = boltSzuro.filter(value => value !== bolt.id);
+            console.debug('AkcioListaComponent - boltSzuroKlikk: ', ujLista);
+            this.boltSzuro.set(ujLista);
+        } else {
+            const ujLista = boltSzuro.concat([bolt.id])
+            this.boltSzuro.set(ujLista);
+        }
+    }
+
+    ezKijeloltBolt(bolt: any): boolean {
+        return this.boltSzuro().indexOf(bolt.id) > -1;
+    }
+
+    rotalas(): void {
+        if (this.keresoGombSzoveg() === 'Mind') {
+            this.keresoGombSzoveg.set('Mai');
+        } else if (this.keresoGombSzoveg() === 'Mai') {
+            this.keresoGombSzoveg.set('Lehet')
+        } else {
+            this.keresoGombSzoveg.set('Mind')
+        }
+    }
+
+    szuroTorles(): void {
+        console.debug('AkcioListaComponent - szuroTorles');
+        this.szuroSzoveg.set('');
+        this.boltSzuro.set([]);
     }
 
     // késleltetett bevitel esetén minta megoldás
