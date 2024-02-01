@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { TestServiceService } from '../../test-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { BOLTOK } from '../../common.constants';
-
+import { Component, signal } from '@angular/core';
+import { debounceTime } from 'rxjs';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop'
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-akcio-lista',
     standalone: true,
-    imports: [ButtonModule],
+    imports: [ButtonModule, InputTextModule, FormsModule],
     templateUrl: './akcio-lista.component.html',
     styleUrl: './akcio-lista.component.scss'
 })
@@ -17,6 +20,24 @@ export class AkcioListaComponent {
     loading: boolean = false;
     // boltok = BoltAzon;
     boltok = BOLTOK;
+    searchTerm = signal('');
+    searchFor = toSignal(toObservable(this.searchTerm).pipe(debounceTime(1000)), {
+        initialValue: '',
+    });
+    public _keresoSzoveg: any = null;
+    public get keresoSzoveg(): any {
+        return this._keresoSzoveg;
+    }
+    public set keresoSzoveg(newValue: any) {
+        this._keresoSzoveg = newValue;
+        console.debug('AkcioListaComponent - kereső szöveg változott ', newValue);
+    }
+
+    kereses(event: any): void {
+        console.debug('AkcioListaComponent - kereses ', event);
+        this.searchTerm.set(event);
+
+    }
 
     constructor(private testServiceService: TestServiceService, private fireAuthService: FireAuthService) { }
 
