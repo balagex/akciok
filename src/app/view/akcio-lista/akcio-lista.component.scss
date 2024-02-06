@@ -7,8 +7,9 @@
     .al-szuro {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: space-between;
+        height: 55px;
 
         .szuro-bolt {
             height: 55px;
@@ -49,6 +50,7 @@
         justify-content: space-between;
         align-items: center;
         margin-top: 4px;
+        height: 46px;
 
         .kereso-gomb {
             max-width: 30%;
@@ -62,6 +64,13 @@
         .kereso-torlo {
             min-width: 50px;
         }
+    }
+
+    .al-torzs {
+        width: 100%;
+        height: calc(100% - 102px);
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .rejtett {

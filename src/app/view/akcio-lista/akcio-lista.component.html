@@ -32,9 +32,28 @@
         </div>
     </div>
     <div class="al-torzs">
-        @for (tetel of kivalasztottListaTetelei(); track tetel.azon) {
+        @for (boltkey of kivalasztottListaTetelei().keys(); track boltkey) {
         <div class="törzs-bolt">
-            <span>{{tetel.boltAzon}} - {{tetel.kezdoNap}} - {{tetel.vegeNap}} - {{tetel.nev}}</span>
+            <div class="bolt-fej">
+                {{boltkey}}
+            </div>
+            <div class="bolt-torzs">
+                @for (intervallumkey of kivalasztottListaTetelei().get(boltkey).keys(); track intervallumkey) {
+                <div class="intervallum-blokk">
+                    <div class="intervallum-fej">{{intervallumkey}} -
+                        {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].kezdoNapNevRov}} -
+                        {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].vegeNapNevRov}}</div>
+                    <div class="intervallum-torzs">
+                        @for (tetel of kivalasztottListaTetelei().get(boltkey).get(intervallumkey); track tetel) {
+                        <div class="tetel-sor">{{tetel.nev}}</div>
+                        }
+                        @for (item of [].constructor(10); track $index) {
+                            <div class="tetel-sor">{{$index}}</div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
         </div>
         }
     </div>

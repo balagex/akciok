@@ -49,7 +49,7 @@ export class AkcioListaComponent {
         console.debug('AkcioListaComponent - kereső szöveg változott ', newValue);
     }
 
-    kivalasztottListaTetelei = computed<AkcioTetel[]>(() => {
+    kivalasztottListaTetelei = computed<Map<BoltAzon, Map<string, AkcioTetel[]>>>(() => {
         const kivalasztottLista = this.adatServiceService.kivalasztottLista();
         const fullLista = this.adatServiceService.akciosTetelLista();
         const keresesiIdo = this.keresoGombSzoveg();
@@ -58,13 +58,35 @@ export class AkcioListaComponent {
 
         // console.debug('AkcioListaComponent - kivalasztottListaTetelei ', kivalasztottLista, fullLista);
         if (kivalasztottLista && fullLista && fullLista.length > 0) {
+            const adatMap: Map<BoltAzon, Map<string, AkcioTetel[]>> = new Map<BoltAzon, Map<string, AkcioTetel[]>>();
             let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon &&
                 (this.boltSzuro().length === 0 || (this.boltSzuro().findIndex(sz => sz == tetel.boltAzon) > -1)) &&
                 (szuroSzoveg.length < 1 || (tetel.nev.indexOf(szuroSzoveg) > -1)));
-            console.debug('AkcioListaComponent - heti lista ', hetiLista, keresesiIdo, boltSzuro, szuroSzoveg);
-            return hetiLista;
+            if (hetiLista?.length > 0) {
+                hetiLista.forEach(tetel => {
+                    if (adatMap.has(tetel.boltAzon)) {
+                        const intervallumMap = adatMap.get(tetel.boltAzon);
+                        if (intervallumMap.has(tetel.intervallum)) {
+                            let intervallumElemek = intervallumMap.get(tetel.intervallum);
+                            intervallumElemek.push(tetel);
+                            intervallumMap.set(tetel.intervallum, intervallumElemek);
+                        } else {
+                            intervallumMap.set(tetel.intervallum, [tetel]);
+                        }
+                        adatMap.set(tetel.boltAzon, intervallumMap);
+                    } else {
+                        const intervallumMap: Map<string, AkcioTetel[]> = new Map<string, AkcioTetel[]>();
+                        intervallumMap.set(tetel.intervallum, [tetel]);
+                        adatMap.set(tetel.boltAzon, intervallumMap);
+                    }
+                });
+            }
+            console.debug('AkcioListaComponent - heti lista ', hetiLista, keresesiIdo, boltSzuro, szuroSzoveg, adatMap);
+            // return hetiLista;
+            return adatMap;
         } else {
-            return [];
+            return new Map<BoltAzon, Map<string, AkcioTetel[]>>();
+            // return [];
         }
     });
 

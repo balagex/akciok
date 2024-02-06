@@ -1,13 +1,17 @@
+import { YYYYMMDDToDate, dateToYYYYMMDD, napRovidites } from "../utils";
 import { AkcioTetelIF } from "./akcio-tetel.interface";
 import { BoltAzon, getBoltAzonViaString } from "./bolt-azon.enum";
 
-export class AkcioTetel implements AkcioTetelIF {
+export class AkcioTetel {
 
     azon: string;
     listaAzon: string;
     boltAzon: BoltAzon;
-    kezdoNap: string;
-    vegeNap: string;
+    kezdoNap: Date;
+    kezdoNapNevRov: string;
+    vegeNap: Date;
+    vegeNapNevRov: string;
+    intervallum: string;
     nev: string;
     kiemeltE: boolean;
     megjegyzes?: string;
@@ -27,8 +31,11 @@ export class AkcioTetel implements AkcioTetelIF {
             this.azon = tetel.azon;
             this.listaAzon = tetel.listaAzon;
             this.boltAzon = getBoltAzonViaString(tetel.boltAzon);
-            this.kezdoNap = tetel.kezdoNap;
-            this.vegeNap = tetel.vegeNap;
+            this.kezdoNap = YYYYMMDDToDate(tetel.kezdoNap, 6);
+            this.kezdoNapNevRov = this.kezdoNap && this.kezdoNap instanceof Date ? napRovidites(this.kezdoNap, 'hu-HU') : '';
+            this.vegeNap = YYYYMMDDToDate(tetel.vegeNap, 6);
+            this.vegeNapNevRov = this.vegeNap && this.vegeNap instanceof Date ? napRovidites(this.vegeNap, 'hu-HU') : '';
+            this.intervallum = tetel.kezdoNap + '-' + tetel.vegeNap;
             this.nev = tetel.nev;
             this.kiemeltE = tetel.kiemeltE !== null && tetel.kiemeltE !== undefined ? tetel.kiemeltE : false;
             this.megjegyzes = tetel.megjegyzes;
@@ -36,11 +43,26 @@ export class AkcioTetel implements AkcioTetelIF {
             this.azon = 'AT' + (new Date()).getTime();
             this.listaAzon = null;
             this.boltAzon = BoltAzon.LIDL;
-            this.kezdoNap = '';
-            this.vegeNap = '';
+            this.kezdoNap = null;
+            this.vegeNap = null;
             this.nev = '';
             this.kiemeltE = false;
             this.megjegyzes = '';
         }
     }
+
+
+    convertForSave(): AkcioTetelIF {
+        return {
+            azon: this.azon,
+            listaAzon: this.listaAzon,
+            boltAzon: this.boltAzon,
+            kezdoNap: dateToYYYYMMDD(this.kezdoNap),
+            vegeNap: dateToYYYYMMDD(this.vegeNap),
+            nev: this.nev,
+            kiemeltE: this.kiemeltE,
+            megjegyzes: this.megjegyzes
+        };
+    }
+
 }
