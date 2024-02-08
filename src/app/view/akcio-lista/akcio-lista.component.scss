@@ -1,3 +1,48 @@
+.nincs-lista-keret {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .nincs-lista-uzi {
+        font-size: 1.5em;
+        font-weight: 700;
+        margin-top: -40%;
+        text-align: center;
+        padding: 0 15%;
+    }
+
+    .nincs-lista-uj {
+        margin-top: 50px;
+    }
+}
+
+.lista-felvetel {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+
+    .felvetel-form {
+        width: 100%;
+    }
+
+    .felvetel-gombok {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+    
+}
+
+
 .al-keret {
     display: flex;
     flex-direction: column;

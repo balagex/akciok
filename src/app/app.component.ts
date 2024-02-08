@@ -2,21 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { initializeApp } from 'firebase/app';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PrimeNGConfig } from 'primeng/api';
 
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet],
+    imports: [CommonModule, RouterOutlet, TranslateModule],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
     title = 'uj-lista';
 
-    constructor() { }
+    constructor(private config: PrimeNGConfig, public translateService: TranslateService) {
+        // translateService.addLangs(['hu']);
+        // translateService.setDefaultLang('hu');
+    }
 
     ngOnInit() {
+        this.translateService.setDefaultLang('hu');
+        this.translateService.get('primeng').subscribe(res => this.config.setTranslation(res));
+
         const fbApp = initializeApp({
             apiKey: "AIzaSyBi6CPNouDxhvUeP0MsUOJna5pCRN6HUV8",
             authDomain: "bevasarlolista-8247e.firebaseapp.com"

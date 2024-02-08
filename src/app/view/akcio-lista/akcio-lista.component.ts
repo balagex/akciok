@@ -1,25 +1,38 @@
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { BOLTOK } from '../../common.constants';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
-import { AkcioTetelIF } from '../../model/akcio-tetel.interface';
 import { AkciosLista } from '../../model/akcios-lista.type';
 import { BoltAzon } from '../../model/bolt-azon.enum';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-akcio-lista',
     standalone: true,
-    imports: [ButtonModule, InputTextModule, FormsModule, NgClass],
+    imports: [ButtonModule, InputTextModule, CalendarModule, FormsModule, NgClass, TranslateModule],
     templateUrl: './akcio-lista.component.html',
     styleUrl: './akcio-lista.component.scss'
 })
 export class AkcioListaComponent {
+
+    public hu = {
+        firstDayOfWeek: 1,
+        dayNames: ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'],
+        dayNamesShort: ['Vas', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        dayNamesMin: ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'],
+        monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'],
+        monthNamesShort: ['Jan', 'Feb', 'Már', 'Ápr', 'Máj', 'Jún', 'Júl', 'Aug', 'Sze', 'Okt', 'Nov', 'Dec'],
+        today: 'Ma / Most',
+        clear: 'Törlés',
+        dateFormat: 'yy.mm.dd.'
+    };
 
     loading: boolean = false;
     // boltok = BoltAzon;
@@ -28,12 +41,13 @@ export class AkcioListaComponent {
     keresoGombSzoveg = signal<'Mind' | 'Mai' | 'Lehet'>('Mind');
     boltSzuro = signal<BoltAzon[]>([]);
     szuroSzoveg = signal<string>('');
+    public dateFormat: string = 'yy.mm.dd.';
+
+    public ujListaModalLathato: boolean = false;
+    ujListaIntervallumDatumok: Date[] | undefined;
 
     // BOLTOK - IDŐSZAKOK - tétel lista
     public tetelAdatok: Map<string, Map<string, AkcioTetel[]>> = new Map<string, Map<string, AkcioTetel[]>>();
-
-    akciosListakLista: AkciosLista[] = [];
-    kivalasztottAkciosLista: AkciosLista = null;
 
     // searchTerm = signal('');
     // searchFor = toSignal(toObservable(this.searchTerm).pipe(debounceTime(1000)), {
@@ -48,6 +62,10 @@ export class AkcioListaComponent {
         this._keresoSzoveg = newValue;
         console.debug('AkcioListaComponent - kereső szöveg változott ', newValue);
     }
+
+    kivalasztottLista = computed<AkciosLista>(() => {
+        return this.adatServiceService.kivalasztottLista();
+    });
 
     kivalasztottListaTetelei = computed<Map<BoltAzon, Map<string, AkcioTetel[]>>>(() => {
         const kivalasztottLista = this.adatServiceService.kivalasztottLista();
@@ -98,7 +116,14 @@ export class AkcioListaComponent {
     //     console.debug('AkcioListaComponent - kivalasztottListaTeteleiChangeEffect: ', this.kivalasztottListaTetelei());
     // });
 
-    constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService) { }
+    constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService, protected translate: TranslateService) {
+        this.translate.get('components.date-time-component.date-format').subscribe(res => {
+            console.debug('AkcioListaComponent - date-format: ', res);
+            if (res && res.length > 0) {
+                this.dateFormat = res;
+            }
+        });
+    }
 
 
     ngOnInit() {
@@ -153,7 +178,25 @@ export class AkcioListaComponent {
 
     // }
 
+    ujListaFelvetelInditas(): void {
+        console.debug('AkcioListaComponent - ujListaFelvetele indul');
+        this.ujListaIntervallumDatumok = [];
+        this.ujListaModalLathato = true;
+    }
 
+    ujListaFelvetele(): void {
+        console.debug('AkcioListaComponent - ujListaFelvetele kő', this.ujListaIntervallumDatumok);
+        this.ujListaModalLathato = false;
+    }
+
+    ujListaMegse(): void {
+        console.debug('AkcioListaComponent - ujListaFelvetele NEM kő', this.ujListaIntervallumDatumok);
+        this.ujListaModalLathato = false;
+    }
+
+    hetek(event: any): void {
+        console.debug('AkcioListaComponent - hetek', event, this.ujListaIntervallumDatumok);
+    }
 
 }
 

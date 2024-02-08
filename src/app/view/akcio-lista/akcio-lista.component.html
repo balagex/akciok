@@ -1,3 +1,4 @@
+@if (kivalasztottLista()) {
 <div class="al-keret">
     <div class="al-szuro">
         @for (bolt of boltok; track bolt.order) {
@@ -48,13 +49,56 @@
                         <div class="tetel-sor">{{tetel.nev}}</div>
                         }
                         @for (item of [].constructor(10); track $index) {
-                            <div class="tetel-sor">{{$index}}</div>
+                        <div class="tetel-sor">{{$index}}</div>
                         }
                     </div>
                 </div>
+                }
+                @empty {
+                <div class="ures-lista"></div>
                 }
             </div>
         </div>
         }
     </div>
 </div>
+}
+@else {
+@if (!ujListaModalLathato) {
+<div class="nincs-lista-keret">
+    <div class="nincs-lista-uzi">Az adott dátumhoz mégnem került lista rögzítésre.
+    </div>
+    <div class="nincs-lista-uj">
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Új lista rögzítése"
+                  (onClick)="ujListaFelvetelInditas()"></p-button>
+    </div>
+</div>
+}
+@else {
+<div class="lista-felvetel">
+    <div class="felvetel-form">
+        <p-calendar [(ngModel)]="ujListaIntervallumDatumok"
+                    selectionMode="range"
+                    [dateFormat]="dateFormat"
+                    [readonlyInput]="true"
+                    [firstDayOfWeek]="1"
+                    [inline]="true"
+                    (onSelect)="hetek($event)"></p-calendar>
+                    {{ujListaIntervallumDatumok[0]}} - {{ujListaIntervallumDatumok[1]}}
+    </div>
+    <div class="felvetel-gombok">
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Felvétel"
+                  (onClick)="ujListaFelvetele()"></p-button>
+        <p-button icon="pi pi-undo"
+                  severity="warning"
+                  label="Mégse"
+                  (onClick)="ujListaMegse()"></p-button>
+
+    </div>
+</div>
+}
+}

@@ -3,12 +3,12 @@
 .akcio-keret {
     width: 100%;
     height: 100svh;
-    background-color: chartreuse;
+    // background-color: chartreuse;
     overflow: hidden;
 
     .keret-fej {
         height: 60px;
-        background-color: aquamarine;
+        // background-color: aquamarine;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -16,7 +16,7 @@
 
         .fej-bal, .fej-jobb {
             
-            background-color: blue;
+            // background-color: blue;
             min-width: 55px;
 
             .fej-gomb {
@@ -29,7 +29,7 @@
         }
 
         .fej-kozep {
-            background-color: blueviolet;
+            // background-color: blueviolet;
             text-align: center;
             
             &.fk-min {
@@ -53,13 +53,13 @@
     .keret-torzs {
         width: 100%;
         height: calc(100svh - 60px);
-        background-color: aqua;
+        // background-color: aqua;
         display: flex;
 
         .torzs-bal {
             height: 100%;
             width: 25%;
-            background-color: beige;
+            // background-color: beige;
 
             @media screen and (max-width: 1200px) {
                 display: none;
@@ -69,7 +69,7 @@
         .torzs-kozep-max {
             height: 100%;
             width: 30%;
-            background-color: bisque;
+            // background-color: bisque;
 
             @media screen and (max-width: 1200px) {
                 display: none;
@@ -80,7 +80,7 @@
         .torzs-kozep-min {
             height: 100%;
             display: none;
-            background-color: red;
+            // background-color: red;
 
             @media screen and (max-width: 1200px) {
                 display: block;
@@ -90,26 +90,26 @@
             .kozep-lista {
                 height: 100%;
                 width: 100%;
-                background-color: darksalmon;
+                // background-color: darksalmon;
             }
 
             .kozep-akciok {
                 height: 100%;
                 width: 100%;
-                background-color: pink;
+                // background-color: pink;
             }
             
             .kozep-szerkesztok {
                 height: 100%;
                 width: 100%;
-                background-color: magenta;
+                // background-color: magenta;
             }
         }
 
         .torzs-jobb {
             height: 100%;
             width: 45%;
-            background-color: burlywood;
+            // background-color: burlywood;
 
             @media screen and (max-width: 1200px) {
                 display: none;
