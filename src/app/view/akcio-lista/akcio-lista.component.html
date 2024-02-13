@@ -34,29 +34,34 @@
     </div>
     <div class="al-torzs">
         @for (boltkey of kivalasztottListaTetelei().keys(); track boltkey) {
-        <div class="törzs-bolt">
+        <div class="torzs-bolt">
             <div class="bolt-fej">
                 {{boltkey}}
             </div>
             <div class="bolt-torzs">
                 @for (intervallumkey of kivalasztottListaTetelei().get(boltkey).keys(); track intervallumkey) {
                 <div class="intervallum-blokk">
-                    <div class="intervallum-fej">{{intervallumkey}} -
+                    <div class="intervallum-fej">
                         {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].kezdoNapNevRov}} -
                         {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].vegeNapNevRov}}</div>
                     <div class="intervallum-torzs">
                         @for (tetel of kivalasztottListaTetelei().get(boltkey).get(intervallumkey); track tetel) {
                         <div class="tetel-sor">{{tetel.nev}}</div>
                         }
-                        @for (item of [].constructor(10); track $index) {
+                        <!-- @for (item of [].constructor(50); track $index) {
                         <div class="tetel-sor">{{$index}}</div>
-                        }
+                        } -->
                     </div>
                 </div>
                 }
-                @empty {
-                <div class="ures-lista"></div>
-                }
+            </div>
+        </div>
+        }
+        @empty {
+        <div class="ures-lista">
+            <div class="ures-uzi">
+                Az adott intervallumhoz nem került még egy akciós tétel sem rögzítésrem, vagy a szűrés szerint nincs
+                megjeleníthető tétel.
             </div>
         </div>
         }
@@ -77,28 +82,6 @@
 </div>
 }
 @else {
-<div class="lista-felvetel">
-    <div class="felvetel-form">
-        <p-calendar [(ngModel)]="ujListaIntervallumDatumok"
-                    selectionMode="range"
-                    [dateFormat]="dateFormat"
-                    [readonlyInput]="true"
-                    [firstDayOfWeek]="1"
-                    [inline]="true"
-                    (onSelect)="hetek($event)"></p-calendar>
-                    {{ujListaIntervallumDatumok[0]}} - {{ujListaIntervallumDatumok[1]}}
-    </div>
-    <div class="felvetel-gombok">
-        <p-button icon="pi pi-plus"
-                  severity="success"
-                  label="Felvétel"
-                  (onClick)="ujListaFelvetele()"></p-button>
-        <p-button icon="pi pi-undo"
-                  severity="warning"
-                  label="Mégse"
-                  (onClick)="ujListaMegse()"></p-button>
-
-    </div>
-</div>
+<app-akcio-lista-felvetel (kesz)="ujFelvetelKesz($event)"></app-akcio-lista-felvetel>
 }
 }

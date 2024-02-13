@@ -10,3 +10,6 @@ export const BOLTOK =
         { id: BoltAzon.AUCHAN, image: 'assets/auchan.png', order: 6 },
         { id: BoltAzon.EGYEB, image: 'assets/egyeb.png', order: 7 }
     ];
+
+export const UJ_SOR = `
+`;

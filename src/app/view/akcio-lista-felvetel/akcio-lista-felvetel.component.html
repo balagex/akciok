@@ -1,0 +1,31 @@
+<div class="lista-felvetel">
+    <div class="felvetel-form">
+        <div class="ff-fej">
+            Intervallum megadása
+        </div>
+        <div class="ff-intervallum">
+            <p-calendar [(ngModel)]="ujListaIntervallumDatumok"
+                        selectionMode="range"
+                        [dateFormat]="dateFormat"
+                        [readonlyInput]="true"
+                        [firstDayOfWeek]="1"
+                        [inline]="true"
+                        (onSelect)="hetek($event)"></p-calendar>
+        </div>
+        <div class="ff-hiba">
+            {{listaFelvetelHiba()}}
+        </div>
+    </div>
+    <div class="felvetel-gombok">
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Felvétel"
+                  [disabled]="!intervallumMegadott()"
+                  (onClick)="ujListaFelvetele()"></p-button>
+        <p-button icon="pi pi-undo"
+                  severity="warning"
+                  label="Mégse"
+                  (onClick)="ujListaMegse()"></p-button>
+
+    </div>
+</div>

@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { AkcioTetelIF } from './model/akcio-tetel.interface';
 import { AkciosListaIF } from './model/akcios-lista.interface';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { AkciosLista } from './model/akcios-lista.type';
 import { AkcioTetel } from './model/akcio-tetel.type';
 
@@ -17,11 +17,34 @@ export class AdatServiceService {
 
     constructor(protected httpClient: HttpClient) { }
 
-    akciosListakLekereseAlap(token: string) {
+    akciosListakLekereseAlap(token: string): Observable<AkciosLista[]> {
         return this.httpClient.get<AkciosListaIF[]>('https://bevasarlolista-8247e.firebaseio.com/akciosListak.json?auth=' + token, {
             observe: 'body',
             responseType: 'json'
         }).pipe(map(response => AkciosLista.convertFromIfList(response)));
+    }
+
+    akciosListakMentese(listak: AkciosLista[], token: string): Observable<AkciosLista[]> {
+        const mentendoListak: AkciosListaIF[] = [];
+        if (listak?.length > 0) {
+            listak.forEach(lista => {
+                mentendoListak.push(lista.convertForSave());
+            });
+        }
+        return this.httpClient.put<AkciosListaIF[]>('https://bevasarlolista-8247e.firebaseio.com/akciosListak.json?auth=' + token,
+            mentendoListak,
+            {
+                observe: 'body',
+                responseType: 'json'
+            }).pipe(map(response => AkciosLista.convertFromIfList(response)));
+    }
+
+    akciosListaFelvetel(ujLista: AkciosLista, token: string): Observable<AkciosLista[]> {
+        const listak = this.akciosListakLista();
+        if (ujLista) {
+            listak.push(ujLista);
+        }
+        return this.akciosListakMentese(listak, token);
     }
 
     akcioTetelekLekereseAlap(token: string) {

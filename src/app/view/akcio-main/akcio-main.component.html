@@ -23,14 +23,14 @@
     </div>
     <div class="keret-torzs">
         <div class="torzs-bal">
-            itt lesz a lista választó full hd esetén
+            <app-akcio-lista-lista></app-akcio-lista-lista>
         </div>
         <div class="torzs-kozep-max">
             <app-akcio-lista></app-akcio-lista>
         </div>
         <div class="torzs-kozep-min">
             @if (ful < 2) {
-              <div class="kozep-lista">itt lesz a lista mobil esetén</div>
+              <div class="kozep-lista"><app-akcio-lista-lista></app-akcio-lista-lista></div>
             }
             @else if (ful === 2) {
             <div class="kozep-akciok">

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { AkcioListaComponent } from '../akcio-lista/akcio-lista.component';
-import { AkciosLista } from '../../model/akcios-lista.type';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
+import { AkcioListaListaComponent } from '../akcio-lista-lista/akcio-lista-lista.component';
 
 @Component({
     selector: 'app-akcio-main',
     standalone: true,
-    imports: [ButtonModule, AkcioListaComponent],
+    imports: [ButtonModule, AkcioListaComponent, AkcioListaListaComponent],
     templateUrl: './akcio-main.component.html',
     styleUrl: './akcio-main.component.scss'
 })
