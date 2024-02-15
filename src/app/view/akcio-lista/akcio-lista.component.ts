@@ -3,7 +3,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { BOLTOK } from '../../common.constants';
-import { Component, computed, signal } from '@angular/core';
+import { Component, Input, ViewChild, computed, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
@@ -11,15 +11,22 @@ import { AkciosLista } from '../../model/akcios-lista.type';
 import { BoltAzon } from '../../model/bolt-azon.enum';
 import { NgClass } from '@angular/common';
 import { AkcioListaFelvetelComponent } from '../akcio-lista-felvetel/akcio-lista-felvetel.component';
+import { ConfirmPopup, ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'app-akcio-lista',
     standalone: true,
-    imports: [ButtonModule, InputTextModule, FormsModule, NgClass, AkcioListaFelvetelComponent],
+    imports: [ButtonModule, InputTextModule, FormsModule, NgClass, AkcioListaFelvetelComponent, ConfirmPopupModule],
+    providers: [ConfirmationService],
     templateUrl: './akcio-lista.component.html',
     styleUrl: './akcio-lista.component.scss'
 })
 export class AkcioListaComponent {
+
+    @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
+
+    @Input() mobilE: boolean = false;
 
     loading: boolean = false;
     // boltok = BoltAzon;
@@ -50,6 +57,10 @@ export class AkcioListaComponent {
 
     kivalasztottLista = computed<AkciosLista>(() => {
         return this.adatServiceService.kivalasztottLista();
+    });
+
+    kivalasztottTetel = computed<AkcioTetel>(() => {
+        return this.adatServiceService.kivalasztottTetel();
     });
 
     kivalasztottListaTetelei = computed<Map<BoltAzon, Map<string, AkcioTetel[]>>>(() => {
@@ -101,7 +112,7 @@ export class AkcioListaComponent {
     //     console.debug('AkcioListaComponent - kivalasztottListaTeteleiChangeEffect: ', this.kivalasztottListaTetelei());
     // });
 
-    constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService) {
+    constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService, private confirmationService: ConfirmationService) {
     }
 
     ngOnInit() {
@@ -164,6 +175,46 @@ export class AkcioListaComponent {
     ujFelvetelKesz(eredmeny: boolean): void {
         console.debug('AkcioListaComponent - ujFelvetelKesz', eredmeny);
         this.ujListaModalLathato = false;
+    }
+
+    tetelKijeloles(tetel: AkcioTetel): void {
+        console.debug('AkcioListaComponent - tetelKijeloles', tetel);
+        this.adatServiceService.kivalasztottTetel.set(tetel);
+    }
+
+    tetelModositas(tetel: AkcioTetel): void {
+        console.debug('AkcioListaComponent - tetelModositas', tetel);
+        this.adatServiceService.kivalasztottTetel.set(tetel);
+    }
+
+    tetelTorles(event: Event, tetel: AkcioTetel): void {
+        console.debug('AkcioListaComponent - tetelTorles', event, tetel);
+        this.adatServiceService.kivalasztottTetel.set(tetel);
+        this.confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: 'Biztos töröli a(z) ' + tetel?.nev + ' nevű tételt?',
+            header: null,
+            icon: 'pi pi-exclamation-triangle',
+            acceptIcon: "none",
+            rejectIcon: "none",
+            rejectButtonStyleClass: "p-button-text",
+            accept: () => {
+                console.debug('AkcioListaComponent - tetelTorles OK');
+                this.confirmationService.close();
+            },
+            reject: () => {
+                console.debug('AkcioListaComponent - tetelTorles CANCEL');
+                this.confirmationService.close();
+            }
+        });
+    }
+
+    accept() {
+        this.confirmPopup.accept();
+    }
+
+    reject() {
+        this.confirmPopup.reject();
     }
 
 }

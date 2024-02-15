@@ -1,0 +1,60 @@
+.tetel-szerk-keret {
+    width: 100%;
+    height: 100%;
+
+    .tsz-fej {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .tsz-torzs {
+
+        .bolt-valaszto {
+            
+            height: 55px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+
+            .bolt-gomb {
+
+                margin: 0 10px;
+                border: 2px white solid;
+                background-color: white;
+                position: relative;
+                box-sizing: border-box;
+                line-height: 0px;
+                
+                &.aktiv {
+                    border: 2px red solid;
+                    background-color: red;
+                }
+                
+                &.halvany::after {
+                    content: "";
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    left: 0px;
+                    background-color: white;
+                    opacity: 0.3;
+                }
+        
+                img {
+                    max-height: 50px;
+                }
+            }
+        }
+    }
+
+    .tsz-gombok {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+}

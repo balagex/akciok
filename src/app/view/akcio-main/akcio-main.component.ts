@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { AkcioListaComponent } from '../akcio-lista/akcio-lista.component';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { AkcioListaListaComponent } from '../akcio-lista-lista/akcio-lista-lista.component';
+import { AkcioTetel } from '../../model/akcio-tetel.type';
+import { AkcioTetelSzerkesztoComponent } from '../akcio-tetel-szerkeszto/akcio-tetel-szerkeszto.component';
 
 @Component({
     selector: 'app-akcio-main',
     standalone: true,
-    imports: [ButtonModule, AkcioListaComponent, AkcioListaListaComponent],
+    imports: [ButtonModule, AkcioListaComponent, AkcioListaListaComponent, AkcioTetelSzerkesztoComponent],
     templateUrl: './akcio-main.component.html',
     styleUrl: './akcio-main.component.scss'
 })
@@ -23,6 +25,10 @@ export class AkcioMainComponent implements OnInit {
     jobbra(): void {
         this.ful = this.ful + 1;
     }
+
+    kivalasztottTetel = computed<AkcioTetel>(() => {
+        return this.adatServiceService.kivalasztottTetel();
+    });
 
     constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService) { }
 

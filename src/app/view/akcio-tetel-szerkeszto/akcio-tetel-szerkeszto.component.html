@@ -1,0 +1,54 @@
+<div class="tetel-szerk-keret">
+    <div class="tsz-fej">
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Új tétel adatok megadása"
+                  (onClick)="ujTetelFelvetelInditas()"
+                  [disabled]="kivalasztottLista() == null"></p-button>
+    </div>
+    @if (kivalasztottTetel()) {
+    <div class="tsz-torzs">
+        <div class="">LISTA: {{intervallumStart}} - {{intervallumEnd}}</div>
+        <div class="">BOLT</div>
+        <div class="bolt-valaszto">
+            @for (bolt of boltok; track bolt.order) {
+            <div class="bolt-gomb"
+                 [ngClass]="{'aktiv': kivalasztottTetel()?.boltAzon == bolt.id, 'halvany': kivalasztottTetel()?.boltAzon != bolt.id}"
+                 (click)="boltValasztas(bolt)">
+                <img [src]="bolt.image">
+            </div>
+            }
+        </div>
+        <div class="">INTERVALLUM</div>
+        <div class="">TÉTEL: {{tetelStart}} - {{tetelEnd}}</div>
+        <div class="">NÉV:</div>
+        <div class="">
+            <input type="text"
+                   pInputText
+                   [ngModel]="kivalasztottTetel()?.nev"
+                   (ngModelChange)="nevModositas($event)" />
+        </div>
+        <div class=""></div>
+        <div class=""></div>
+        <div class=""></div>
+    </div>
+    <div class="tsz-gombok">
+        @if (ujTetel) {
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Új adatok rögzítése"
+                  (onClick)="ujTetelMentes()"></p-button>
+        }
+        @else {
+        <p-button icon="pi pi-save"
+                  severity="success"
+                  label="Módosítás mentése"
+                  (onClick)="tetelModositas()"></p-button>
+        <p-button icon="pi pi-trash"
+                  severity="danger"
+                  label="Tétel törlése"
+                  (onClick)="tetelTorles()"></p-button>
+        }
+    </div>
+    }
+</div>

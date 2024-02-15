@@ -48,6 +48,7 @@ export class AkcioListaListaComponent {
 
     listaKivalasztas(lista: AkciosLista): void {
         console.debug('AkcioListaListaComponent - lista kiválasztása');
+        this.adatServiceService.kivalasztottTetel.set(null);
         this.adatServiceService.kivalasztottLista.set(lista);
     }
 

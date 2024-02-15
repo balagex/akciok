@@ -14,10 +14,12 @@ export class AdatServiceService {
     public akciosListakLista = signal<AkciosLista[]>([]);
     public kivalasztottLista = signal<AkciosLista>(null);
     public akciosTetelLista = signal<AkcioTetel[]>([]);
+    public kivalasztottTetel = signal<AkcioTetel>(null);
 
     constructor(protected httpClient: HttpClient) { }
 
     akciosListakLekereseAlap(token: string): Observable<AkciosLista[]> {
+        this.kivalasztottTetel.set(null);
         return this.httpClient.get<AkciosListaIF[]>('https://bevasarlolista-8247e.firebaseio.com/akciosListak.json?auth=' + token, {
             observe: 'body',
             responseType: 'json'
@@ -25,6 +27,7 @@ export class AdatServiceService {
     }
 
     akciosListakMentese(listak: AkciosLista[], token: string): Observable<AkciosLista[]> {
+        this.kivalasztottTetel.set(null);
         const mentendoListak: AkciosListaIF[] = [];
         if (listak?.length > 0) {
             listak.forEach(lista => {
@@ -48,6 +51,7 @@ export class AdatServiceService {
     }
 
     akcioTetelekLekereseAlap(token: string) {
+        this.kivalasztottTetel.set(null);
         return this.httpClient.get<AkcioTetelIF[]>('https://bevasarlolista-8247e.firebaseio.com/akciosTelelek.json?auth=' + token, {
             observe: 'body',
             responseType: 'json'

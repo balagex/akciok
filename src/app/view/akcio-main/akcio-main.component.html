@@ -26,7 +26,7 @@
             <app-akcio-lista-lista></app-akcio-lista-lista>
         </div>
         <div class="torzs-kozep-max">
-            <app-akcio-lista></app-akcio-lista>
+            <app-akcio-lista [mobilE]="false"></app-akcio-lista>
         </div>
         <div class="torzs-kozep-min">
             @if (ful < 2) {
@@ -34,15 +34,17 @@
             }
             @else if (ful === 2) {
             <div class="kozep-akciok">
-                <app-akcio-lista></app-akcio-lista>
+                <app-akcio-lista [mobilE]="true"></app-akcio-lista>
             </div>
             }
             @else {
-            <div class="kozep-szerkesztok">itt lesz a szerkesztő mobil esetén</div>
+            <div class="kozep-szerkesztok">
+                <app-akcio-tetel-szerkeszto [mobilE]="true"></app-akcio-tetel-szerkeszto>
+            </div>
             }
         </div>
         <div class="torzs-jobb">
-            itt lesz a szerkesztő full hd esetén
+            <app-akcio-tetel-szerkeszto [mobilE]="false"></app-akcio-tetel-szerkeszto>
         </div>
     </div>
 </div>

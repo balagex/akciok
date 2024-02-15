@@ -46,7 +46,47 @@
                         {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].vegeNapNevRov}}</div>
                     <div class="intervallum-torzs">
                         @for (tetel of kivalasztottListaTetelei().get(boltkey).get(intervallumkey); track tetel) {
-                        <div class="tetel-sor">{{tetel.nev}}</div>
+                        <div class="tetel-sor" [ngClass]="{'kivalasztott-sor': tetel.azon == kivalasztottTetel()?.azon}">
+                            <div class="tetel-info"
+                                 [ngClass]="{'kiemelt-sor': tetel.kiemeltE}"
+                                 (click)="tetelKijeloles(tetel)">
+                                {{tetel.nev}}@if (tetel.kiemeltE) {<span class="tetel-kiemelt"> !!!</span>} @if
+                                (tetel.megjegyzes) {<span class="tetel-megjegyzes"> ({{tetel.megjegyzes}})</span>}
+                            </div>
+                            <div class="tetel-gombok">
+                                @if (!mobilE) {
+                                <div class="tetel-mod"
+                                     (click)="tetelModositas(tetel)">
+                                    <span class="pi pi-pencil"></span>
+                                </div>
+                                <div class="tetel-torles"
+                                     (click)="tetelTorles($event, tetel)">
+                                    <span class="pi pi-trash"></span>
+                                    <p-confirmPopup #confirmPopupRef>
+                                        <ng-template pTemplate="headless"
+                                                     let-message>
+                                            <div class="torles-confirm-keret">
+                                                <div class="tc-uzi">
+                                                    <span>{{ message.message }}</span>
+                                                </div>
+                                                <div class="tc-gombok">
+                                                    <p-button icon="pi pi-trash"
+                                                              severity="danger"
+                                                              [rounded]="true"
+                                                              [text]="true"
+                                                              (onClick)="accept()"></p-button>
+                                                    <p-button icon="pi pi pi-undo"
+                                                              [rounded]="true"
+                                                              [text]="true"
+                                                              (onClick)="reject()"></p-button>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-confirmPopup>
+                                </div>
+                                }
+                            </div>
+                        </div>
                         }
                         <!-- @for (item of [].constructor(50); track $index) {
                         <div class="tetel-sor">{{$index}}</div>
