@@ -6,16 +6,19 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ButtonModule } from 'primeng/button';
 import { AkciosLista } from '../../model/akcios-lista.type';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
-import { dateToYYYYMMDD, napRovidites } from '../../utils';
+import { dateToYYYYMMDD, intervallDates, napRovidites } from '../../utils';
 import { BOLTOK } from '../../common.constants';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
+import { NapValasztoComponent } from '../nap-valaszto/nap-valaszto.component';
+import { CheckboxModule } from 'primeng/checkbox';
+
 
 @Component({
     selector: 'app-akcio-tetel-szerkeszto',
     standalone: true,
-    imports: [ConfirmPopupModule, ButtonModule, FormsModule, NgClass, InputTextModule],
+    imports: [ConfirmPopupModule, ButtonModule, FormsModule, NgClass, InputTextModule, NapValasztoComponent, CheckboxModule],
     providers: [ConfirmationService],
     templateUrl: './akcio-tetel-szerkeszto.component.html',
     styleUrl: './akcio-tetel-szerkeszto.component.scss'
@@ -25,13 +28,30 @@ export class AkcioTetelSzerkesztoComponent {
     @Input() mobilE: boolean = false;
 
     boltok = BOLTOK;
-    kivalasztottBolt: any = BOLTOK[1];
+    kivalasztottBolt: any = null;
 
     intervallumStart: Date = null;
     intervallumEnd: Date = null;
+    intervallumStr: string = null;
+    intervallumDatumok: Date[] = [];
     tetelStart: Date = null;
     tetelEnd: Date = null;
     ujTetel: boolean = false;
+    tetelNev: string = null;
+    tetelMegjegyzes: string = null;
+    tetelKiemeltE: boolean = false;
+
+    // azon: string;
+    // listaAzon: string;
+    // boltAzon: BoltAzon;
+    // kezdoNap: Date;
+    // kezdoNapNevRov: string;
+    // vegeNap: Date;
+    // vegeNapNevRov: string;
+    // intervallum: string;
+    // nev: string;
+    // kiemeltE: boolean;
+    // megjegyzes?: string;
 
     kivalasztottLista = computed<AkciosLista>(() => {
         return this.adatServiceService.kivalasztottLista();
@@ -41,6 +61,11 @@ export class AkcioTetelSzerkesztoComponent {
         return this.adatServiceService.kivalasztottTetel();
     });
 
+    vanMentendoTetel = computed<boolean>(() => {
+        const tetelek = this.adatServiceService.akciosTetelLista();
+        return tetelek && tetelek.length > 0 && tetelek.findIndex(t => t.mentendo) > -1;
+    });
+
     constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService, private confirmationService: ConfirmationService) {
 
         effect(() => {
@@ -48,9 +73,14 @@ export class AkcioTetelSzerkesztoComponent {
             if (this.adatServiceService.kivalasztottLista()) {
                 this.intervallumStart = this.adatServiceService.kivalasztottLista().kezdoNap;
                 this.intervallumEnd = this.adatServiceService.kivalasztottLista().vegeNap;
+                this.intervallumStr = dateToYYYYMMDD(this.intervallumStart) + '-' + dateToYYYYMMDD(this.intervallumEnd);
+                this.intervallumDatumok = intervallDates(this.intervallumStart, this.intervallumEnd);
+                console.log('AkcioTetelSzerkesztoComponent - DÁTUMOK ', this.intervallumStart, this.intervallumEnd, this.intervallumDatumok);
             } else {
                 this.intervallumStart = null;
                 this.intervallumEnd = null;
+                this.intervallumStr = null;
+                this.intervallumDatumok = [];
             }
         });
 
@@ -59,7 +89,11 @@ export class AkcioTetelSzerkesztoComponent {
             if (this.adatServiceService.kivalasztottTetel()) {
                 this.tetelStart = this.adatServiceService.kivalasztottTetel().kezdoNap;
                 this.tetelEnd = this.adatServiceService.kivalasztottTetel().vegeNap;
-                if (this.adatServiceService.akciosTetelLista().findIndex(t => t.azon == this.adatServiceService.kivalasztottTetel().azon) > 0) {
+                this.tetelNev = this.adatServiceService.kivalasztottTetel().nev;
+                this.tetelMegjegyzes = this.adatServiceService.kivalasztottTetel().megjegyzes;
+                this.tetelKiemeltE = this.adatServiceService.kivalasztottTetel().kiemeltE;
+                this.kivalasztottBolt = this.boltok.find(b => b.id == this.adatServiceService.kivalasztottTetel().boltAzon);
+                if (this.adatServiceService.akciosTetelLista().findIndex(t => t.azon == this.adatServiceService.kivalasztottTetel().azon) > -1) {
                     console.log('AkcioTetelSzerkesztoComponent - meglévő tétel kiválasztás ');
                     this.ujTetel = false;
                 } else {
@@ -70,30 +104,75 @@ export class AkcioTetelSzerkesztoComponent {
                 this.tetelStart = null;
                 this.tetelEnd = null;
                 this.ujTetel = false;
+                this.tetelNev = null;
+                this.tetelMegjegyzes = null;
+                this.tetelKiemeltE = false;
+                this.kivalasztottBolt = null;
             }
         });
     }
 
 
-    ujTetelFelvetelInditas(): void {
+    ujTetelFelvetelInditas(start?: Date, end?: Date): void {
         const ujTetel: AkcioTetel = new AkcioTetel();
         ujTetel.listaAzon = this.adatServiceService.kivalasztottLista()?.azon;
-        ujTetel.kezdoNap = this.adatServiceService.kivalasztottLista()?.kezdoNap;
-        ujTetel.vegeNap = this.adatServiceService.kivalasztottLista()?.vegeNap;
+        ujTetel.kezdoNap = start ? start : this.adatServiceService.kivalasztottLista()?.kezdoNap;
+        ujTetel.vegeNap = end ? end : this.adatServiceService.kivalasztottLista()?.vegeNap;
         ujTetel.kezdoNapNevRov = napRovidites(ujTetel.kezdoNap, 'hu-HU');
         ujTetel.vegeNapNevRov = napRovidites(ujTetel.vegeNap, 'hu-HU');
         ujTetel.intervallum = dateToYYYYMMDD(ujTetel.kezdoNap) + '-' + dateToYYYYMMDD(ujTetel.vegeNap);
+        ujTetel.mentendo = true;
         console.debug('AkcioTetelSzerkesztoComponent - ujTetelFelvetelInditas...', ujTetel);
 
         this.adatServiceService.kivalasztottTetel.set(ujTetel);
     }
 
     ujTetelMentes(): void {
-        console.debug('AkcioTetelSzerkesztoComponent - ujTetelMentes...', this.adatServiceService.kivalasztottTetel());
+        console.debug('AkcioTetelSzerkesztoComponent - ujTetelMentes...', this.adatServiceService.kivalasztottTetel(), this.tetelNev, this.tetelMegjegyzes, this.tetelKiemeltE, this.kivalasztottBolt);
+        this.tetelMentendoLesz(true);
     }
 
     tetelModositas(): void {
-        console.debug('AkcioTetelSzerkesztoComponent - tetelModositas...', this.adatServiceService.kivalasztottTetel(), this.adatServiceService.akciosTetelLista());
+        console.debug('AkcioTetelSzerkesztoComponent - tetelModositas...', this.adatServiceService.kivalasztottTetel(), this.adatServiceService.akciosTetelLista(), this.tetelNev, this.tetelMegjegyzes, this.tetelKiemeltE, this.kivalasztottBolt);
+        this.tetelMentendoLesz(false);
+    }
+
+    tetelMentendoLesz(ujTetel: boolean): void {
+        console.debug('AkcioTetelSzerkesztoComponent - tetelMentendoLesz...', ujTetel, this.adatServiceService.kivalasztottTetel(), this.adatServiceService.akciosTetelLista(), this.tetelNev, this.tetelMegjegyzes, this.tetelKiemeltE, this.kivalasztottBolt);
+        const mentendoTetel = this.adatServiceService.kivalasztottTetel();
+        mentendoTetel.boltAzon = this.kivalasztottBolt.id;
+        mentendoTetel.nev = this.tetelNev;
+        mentendoTetel.megjegyzes = this.tetelMegjegyzes;
+        mentendoTetel.kiemeltE = this.tetelKiemeltE;
+        mentendoTetel.kezdoNap = this.tetelStart;
+        mentendoTetel.kezdoNapNevRov = napRovidites(this.tetelStart, 'hu-HU');
+        mentendoTetel.vegeNap = this.tetelEnd;
+        mentendoTetel.vegeNapNevRov = napRovidites(this.tetelEnd, 'hu-HU');
+        mentendoTetel.intervallum = dateToYYYYMMDD(this.tetelStart) + '-' + dateToYYYYMMDD(this.tetelEnd);
+        mentendoTetel.mentendo = true;
+        const tetelek = this.adatServiceService.akciosTetelLista().filter(t => t.azon !== mentendoTetel.azon);
+        this.adatServiceService.akciosTetelLista.set(tetelek);
+        tetelek.push(mentendoTetel);
+        if (ujTetel) {
+            this.ujTetelFelvetelInditas(this.tetelStart, this.tetelEnd);
+        } else {
+            this.adatServiceService.kivalasztottTetel.set(mentendoTetel);
+        }
+
+    }
+
+    mentendoAdatokMentese(): void {
+        console.debug('AkcioTetelSzerkesztoComponent - mentendoAdatokMentese indítás...');
+        this.adatServiceService.akciosTetelekMentese(this.adatServiceService.akciosTetelLista(), this.fireAuthService.getToken()).subscribe({
+            next: (mentettTetelek) => {
+                console.debug('AkcioTetelSzerkesztoComponent - A mentendő tételek mentése után lekért akciós tételek: ', mentettTetelek);
+                this.adatServiceService.akciosTetelLista.set(mentettTetelek);
+            },
+            error: (modositasError) => {
+                console.error('AkcioTetelSzerkesztoComponent - HIBA AZ AKCIOS TÉTELEK MÓDOSÍTÁSA SORÁN ', modositasError);
+                // TODO: kitalálni mi legyen
+            }
+        });
     }
 
     tetelTorles(): void {
@@ -102,11 +181,16 @@ export class AkcioTetelSzerkesztoComponent {
 
     boltValasztas(bolt: any): void {
         console.debug('AkcioTetelSzerkesztoComponent - boltValasztas', bolt, this.ujTetel);
-        if (this.ujTetel && bolt && bolt.id && this.adatServiceService.kivalasztottTetel().boltAzon != bolt.id) {
-            const ujTetel = this.adatServiceService.kivalasztottTetel();
-            ujTetel.boltAzon = bolt.id;
-            this.adatServiceService.kivalasztottTetel.set(ujTetel);
+        if (bolt) {
+            this.kivalasztottBolt = bolt;
+        } else {
+            this.kivalasztottBolt = null;
         }
+        // if (bolt && bolt.id && this.adatServiceService.kivalasztottTetel().boltAzon != bolt.id) {
+        //     const ujTetel = this.adatServiceService.kivalasztottTetel();
+        //     ujTetel.boltAzon = bolt.id;
+        //     this.adatServiceService.kivalasztottTetel.set(ujTetel);
+        // }
         // TODO: meglévő tétel boltját is lehessen módosítani
 
         // https://stackoverflow.com/questions/76174124/push-in-angular-signals-array
@@ -123,5 +207,22 @@ export class AkcioTetelSzerkesztoComponent {
         } else {
 
         }
+    }
+
+    startNapValasztas(nap: Date): void {
+        console.debug('AkcioTetelSzerkesztoComponent - startNapValasztas', nap);
+        this.tetelStart = nap;
+        if (nap > this.tetelEnd) {
+            this.tetelEnd = nap;
+        }
+    }
+
+    endNapValasztas(nap: Date): void {
+        console.debug('AkcioTetelSzerkesztoComponent - endNapValasztas', nap);
+        this.tetelEnd = nap;
+        if (nap < this.tetelStart) {
+            this.tetelStart = nap;
+        }
+
     }
 }

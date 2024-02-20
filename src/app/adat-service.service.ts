@@ -58,6 +58,21 @@ export class AdatServiceService {
         }).pipe(map(response => AkcioTetel.convertFromIfList(response)));
     }
 
+    akciosTetelekMentese(tetelek: AkcioTetel[], token: string): Observable<AkcioTetel[]> {
+        const mentendoTetelek: AkcioTetelIF[] = [];
+        if (tetelek?.length > 0) {
+            tetelek.forEach(tetel => {
+                mentendoTetelek.push(tetel.convertForSave());
+            });
+        }
+        return this.httpClient.put<AkcioTetelIF[]>('https://bevasarlolista-8247e.firebaseio.com/akciosTelelek.json?auth=' + token,
+            mentendoTetelek,
+            {
+                observe: 'body',
+                responseType: 'json'
+            }).pipe(map(response => AkcioTetel.convertFromIfList(response)));
+    }
+
     aktulaisHetKivalasztasa(): void {
         const most = new Date();
         const ezAHet = this.akciosListakLista().find(value => value.kezdoNap <= most && value.vegeNap >= most);

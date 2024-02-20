@@ -13,6 +13,7 @@ import { NgClass } from '@angular/common';
 import { AkcioListaFelvetelComponent } from '../akcio-lista-felvetel/akcio-lista-felvetel.component';
 import { ConfirmPopup, ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
+import { doCompare, sortFunction } from '../../utils';
 
 @Component({
     selector: 'app-akcio-lista',
@@ -32,7 +33,7 @@ export class AkcioListaComponent {
     // boltok = BoltAzon;
     boltok = BOLTOK;
 
-    keresoGombSzoveg = signal<'Mind' | 'Mai' | 'Lehet'>('Mind');
+    keresoGombSzoveg = signal<'Mind' | 'Mai' | 'Ma+'>('Mind');
     boltSzuro = signal<BoltAzon[]>([]);
     szuroSzoveg = signal<string>('');
 
@@ -73,6 +74,7 @@ export class AkcioListaComponent {
         // console.debug('AkcioListaComponent - kivalasztottListaTetelei ', kivalasztottLista, fullLista);
         if (kivalasztottLista && fullLista && fullLista.length > 0) {
             const adatMap: Map<BoltAzon, Map<string, AkcioTetel[]>> = new Map<BoltAzon, Map<string, AkcioTetel[]>>();
+            const rendezettAdatMap: Map<BoltAzon, Map<string, AkcioTetel[]>> = new Map<BoltAzon, Map<string, AkcioTetel[]>>();
             let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon &&
                 (this.boltSzuro().length === 0 || (this.boltSzuro().findIndex(sz => sz == tetel.boltAzon) > -1)) &&
                 (szuroSzoveg.length < 1 || (tetel.nev.indexOf(szuroSzoveg) > -1)));
@@ -96,8 +98,17 @@ export class AkcioListaComponent {
                 });
             }
             console.debug('AkcioListaComponent - heti lista ', hetiLista, keresesiIdo, boltSzuro, szuroSzoveg, adatMap);
+            adatMap.forEach((value: Map<string, AkcioTetel[]>, key: BoltAzon) => {
+                const sortedMapValue = new Map([...value.entries()].sort());
+                sortedMapValue.forEach((innerValue: AkcioTetel[], innerKey: string) => {
+                    innerValue.sort((a, b) => {
+                        return sortFunction(a, b, 1, 'nev', null, true);
+                    });
+                });
+                rendezettAdatMap.set(key, sortedMapValue);
+            });
             // return hetiLista;
-            return adatMap;
+            return rendezettAdatMap;
         } else {
             return new Map<BoltAzon, Map<string, AkcioTetel[]>>();
             // return [];
@@ -148,7 +159,7 @@ export class AkcioListaComponent {
         if (this.keresoGombSzoveg() === 'Mind') {
             this.keresoGombSzoveg.set('Mai');
         } else if (this.keresoGombSzoveg() === 'Mai') {
-            this.keresoGombSzoveg.set('Lehet')
+            this.keresoGombSzoveg.set('Ma+')
         } else {
             this.keresoGombSzoveg.set('Mind')
         }

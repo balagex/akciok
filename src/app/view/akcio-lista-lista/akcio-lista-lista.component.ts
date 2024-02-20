@@ -52,4 +52,9 @@ export class AkcioListaListaComponent {
         this.adatServiceService.kivalasztottLista.set(lista);
     }
 
+    listabanVanMentendotetel(lista: AkciosLista): boolean {
+        const listaTetelei = this.adatServiceService.akciosTetelLista()?.filter(t => t.listaAzon == lista.azon);
+        return listaTetelei && listaTetelei.length > 0 && listaTetelei.findIndex(x => x.mentendo) > -1;
+    }
+
 }

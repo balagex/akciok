@@ -13,7 +13,12 @@
             <span class="pi pi-caret-right"></span>
             }
         </div>
-        <div class="lt-inter" (click)="listaKivalasztas(lista)">{{lista.kezdonapForras}} - {{lista.vegeNapForras}}</div>
+        <div class="lt-inter" (click)="listaKivalasztas(lista)">
+            {{lista.kezdonapForras}} - {{lista.vegeNapForras}}
+            @if (listabanVanMentendotetel(lista)) {
+                &nbsp;(<span class="pi pi-save"></span>)
+            }
+        </div>
         <div class="lt-mod">
             <p-button icon="pi pi-pencil"
                       [rounded]="true"

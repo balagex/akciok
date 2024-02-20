@@ -15,6 +15,7 @@ export class AkcioTetel {
     nev: string;
     kiemeltE: boolean;
     megjegyzes?: string;
+    mentendo: boolean;
 
     static convertFromIfList(list: AkcioTetelIF[]): AkcioTetel[] {
         const result: AkcioTetel[] = [];
@@ -39,6 +40,7 @@ export class AkcioTetel {
             this.nev = tetel.nev;
             this.kiemeltE = tetel.kiemeltE !== null && tetel.kiemeltE !== undefined ? tetel.kiemeltE : false;
             this.megjegyzes = tetel.megjegyzes;
+            this.mentendo = false;
         } else {
             this.azon = 'AT' + (new Date()).getTime();
             this.listaAzon = null;
@@ -48,6 +50,7 @@ export class AkcioTetel {
             this.nev = '';
             this.kiemeltE = false;
             this.megjegyzes = '';
+            this.mentendo = true;
         }
     }
 

@@ -26,8 +26,9 @@
                    (ngModelChange)="szuroSzoveg.set($event)" />
         </div>
         <div class="kereso-torlo">
-            <p-button icon="pi pi-search-minus"
+            <p-button icon="pi pi-filter-slash"
                       severity="danger"
+                      [rounded]="true"
                       (onClick)="szuroTorles()"
                       [ngClass]="{'rejtett': boltSzuro().length == 0 && szuroSzoveg().length == 0}"></p-button>
         </div>
@@ -46,12 +47,15 @@
                         {{kivalasztottListaTetelei().get(boltkey).get(intervallumkey)[0].vegeNapNevRov}}</div>
                     <div class="intervallum-torzs">
                         @for (tetel of kivalasztottListaTetelei().get(boltkey).get(intervallumkey); track tetel) {
-                        <div class="tetel-sor" [ngClass]="{'kivalasztott-sor': tetel.azon == kivalasztottTetel()?.azon}">
+                        <div class="tetel-sor"
+                             [ngClass]="{'kivalasztott-sor': tetel.azon == kivalasztottTetel()?.azon}">
                             <div class="tetel-info"
                                  [ngClass]="{'kiemelt-sor': tetel.kiemeltE}"
                                  (click)="tetelKijeloles(tetel)">
-                                {{tetel.nev}}@if (tetel.kiemeltE) {<span class="tetel-kiemelt"> !!!</span>} @if
-                                (tetel.megjegyzes) {<span class="tetel-megjegyzes"> ({{tetel.megjegyzes}})</span>}
+                                @if (tetel.mentendo) {<span class="pi pi-save tetel-mentendo"></span>}
+                                {{tetel.nev}}
+                                @if (tetel.kiemeltE) {<span class="tetel-kiemelt"> !!!</span>}
+                                @if (tetel.megjegyzes) {<span class="tetel-megjegyzes"> ({{tetel.megjegyzes}})</span>}
                             </div>
                             <div class="tetel-gombok">
                                 @if (!mobilE) {

@@ -2,8 +2,10 @@
     <div class="keret-fej">
         <div class="fej-bal">
             @if (ful > 1) {
-            <p-button label="<"
+            <p-button icon="pi pi-angle-double-left"
                       class="fej-gomb"
+                      [rounded]="true"
+                      [outlined]="true"
                       (onClick)="balra()"></p-button>
             }
         </div>
@@ -15,9 +17,11 @@
         </div>
         <div class="fej-jobb">
             @if (ful < 3) {
-            <p-button label=">"
-                      class="fej-gomb"
-                      (onClick)="jobbra()"></p-button>
+              <p-button icon="pi pi-angle-double-right"
+                        class="fej-gomb"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (onClick)="jobbra()"></p-button>
             }
         </div>
     </div>
@@ -29,22 +33,24 @@
             <app-akcio-lista [mobilE]="false"></app-akcio-lista>
         </div>
         <div class="torzs-kozep-min">
-            @if (ful < 2) {
-              <div class="kozep-lista"><app-akcio-lista-lista></app-akcio-lista-lista></div>
-            }
-            @else if (ful === 2) {
-            <div class="kozep-akciok">
-                <app-akcio-lista [mobilE]="true"></app-akcio-lista>
-            </div>
-            }
-            @else {
-            <div class="kozep-szerkesztok">
-                <app-akcio-tetel-szerkeszto [mobilE]="true"></app-akcio-tetel-szerkeszto>
-            </div>
-            }
+            @if (ful < 2)
+              {
+              <div
+              class="kozep-lista"><app-akcio-lista-lista></app-akcio-lista-lista></div>
+        }
+        @else if (ful === 2) {
+        <div class="kozep-akciok">
+            <app-akcio-lista [mobilE]="true"></app-akcio-lista>
         </div>
-        <div class="torzs-jobb">
-            <app-akcio-tetel-szerkeszto [mobilE]="false"></app-akcio-tetel-szerkeszto>
+        }
+        @else {
+        <div class="kozep-szerkesztok">
+            <app-akcio-tetel-szerkeszto [mobilE]="true"></app-akcio-tetel-szerkeszto>
         </div>
+        }
     </div>
+    <div class="torzs-jobb">
+        <app-akcio-tetel-szerkeszto [mobilE]="false"></app-akcio-tetel-szerkeszto>
+    </div>
+</div>
 </div>
