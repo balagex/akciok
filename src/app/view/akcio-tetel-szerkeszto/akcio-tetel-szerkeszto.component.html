@@ -21,7 +21,7 @@
         <div class="bolt-valaszto">
             @for (bolt of boltok; track bolt.order) {
             <div class="bolt-gomb"
-                 [ngClass]="{'aktiv': kivalasztottBolt?.id == bolt.id, 'halvany': kivalasztottBolt == null || kivalasztottBolt?.id != bolt.id}"
+                 [ngClass]="{'aktiv': kivalasztottBolt?.id == bolt.id, 'halvany': kivalasztottBolt == null || kivalasztottBolt?.id != bolt.id, 'mobil': mobilE}"
                  (click)="boltValasztas(bolt)">
                 <img [src]="bolt.image">
             </div>

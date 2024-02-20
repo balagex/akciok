@@ -21,11 +21,12 @@
 
         .bolt-valaszto {
             
-            height: 55px;
+            // height: 55px;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            flex-wrap: wrap;
             // margin-bottom: 30px;
 
             .bolt-gomb {
@@ -40,6 +41,10 @@
                 &.aktiv {
                     border: 2px red solid;
                     background-color: red;
+                }
+
+                &.mobil {
+                    margin: 0 3px;
                 }
                 
                 &.halvany::after {
