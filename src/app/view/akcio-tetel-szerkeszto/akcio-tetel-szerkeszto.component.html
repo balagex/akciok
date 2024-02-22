@@ -3,7 +3,7 @@
         <p-button icon="pi pi-plus"
                   severity="success"
                   label="Új tétel adatok megadása"
-                  (onClick)="ujTetelFelvetelInditas()"
+                  (onClick)="ujTetelFelvetelInditas(null,null,null)"
                   [disabled]="kivalasztottLista() == null"></p-button>
         @if (vanMentendoTetel()) {
         <p-button icon="pi pi-save"

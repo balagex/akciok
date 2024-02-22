@@ -13,6 +13,7 @@ import { NgClass } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { NapValasztoComponent } from '../nap-valaszto/nap-valaszto.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { BoltAzon } from '../../model/bolt-azon.enum';
 
 
 @Component({
@@ -113,8 +114,11 @@ export class AkcioTetelSzerkesztoComponent {
     }
 
 
-    ujTetelFelvetelInditas(start?: Date, end?: Date): void {
+    ujTetelFelvetelInditas(bolt: BoltAzon, start: Date, end: Date): void {
         const ujTetel: AkcioTetel = new AkcioTetel();
+        if (bolt) {
+            ujTetel.boltAzon = bolt;
+        }
         ujTetel.listaAzon = this.adatServiceService.kivalasztottLista()?.azon;
         ujTetel.kezdoNap = start ? start : this.adatServiceService.kivalasztottLista()?.kezdoNap;
         ujTetel.vegeNap = end ? end : this.adatServiceService.kivalasztottLista()?.vegeNap;
@@ -154,7 +158,7 @@ export class AkcioTetelSzerkesztoComponent {
         this.adatServiceService.akciosTetelLista.set(tetelek);
         tetelek.push(mentendoTetel);
         if (ujTetel) {
-            this.ujTetelFelvetelInditas(this.tetelStart, this.tetelEnd);
+            this.ujTetelFelvetelInditas(this.kivalasztottBolt?.id, this.tetelStart, this.tetelEnd);
         } else {
             this.adatServiceService.kivalasztottTetel.set(mentendoTetel);
         }
@@ -162,11 +166,9 @@ export class AkcioTetelSzerkesztoComponent {
     }
 
     mentendoAdatokMentese(): void {
-        console.debug('AkcioTetelSzerkesztoComponent - mentendoAdatokMentese indítás...');
-        this.adatServiceService.akciosTetelekMentese(this.adatServiceService.akciosTetelLista(), this.fireAuthService.getToken()).subscribe({
+        this.adatServiceService.mentendoAdatokMentese(this.fireAuthService.getToken()).subscribe({
             next: (mentettTetelek) => {
                 console.debug('AkcioTetelSzerkesztoComponent - A mentendő tételek mentése után lekért akciós tételek: ', mentettTetelek);
-                this.adatServiceService.akciosTetelLista.set(mentettTetelek);
             },
             error: (modositasError) => {
                 console.error('AkcioTetelSzerkesztoComponent - HIBA AZ AKCIOS TÉTELEK MÓDOSÍTÁSA SORÁN ', modositasError);

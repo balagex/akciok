@@ -82,4 +82,25 @@ export class AdatServiceService {
         }
         console.debug('AdatServiceService - aktulaisHetKivalasztasa: ', this.kivalasztottLista());
     }
+
+    mentendoAdatokMentese(token: string): Observable<AkcioTetel[]> {
+        const result = new Observable<AkcioTetel[]>(
+            observer => {
+                this.akciosTetelekMentese(this.akciosTetelLista(), token).subscribe({
+                    next: (mentettTetelek) => {
+                        console.debug('AdatServiceService - A mentendő tételek mentése után lekért akciós tételek: ', mentettTetelek);
+                        this.akciosTetelLista.set(mentettTetelek);
+                        observer.next(mentettTetelek);
+                        observer.complete();
+                    },
+                    error: (modositasError) => {
+                        console.error('AdatServiceService - HIBA AZ AKCIOS TÉTELEK MÓDOSÍTÁSA SORÁN ', modositasError);
+                        observer.error(modositasError);
+                        observer.complete();
+                    }
+                });
+            });
+        return result;
+    }
+
 }
