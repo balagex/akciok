@@ -6,6 +6,7 @@ import { FireAuthService } from '../../fire-auth.service';
 import { AkcioListaListaComponent } from '../akcio-lista-lista/akcio-lista-lista.component';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
 import { AkcioTetelSzerkesztoComponent } from '../akcio-tetel-szerkeszto/akcio-tetel-szerkeszto.component';
+import { sortFunction } from '../../utils';
 
 @Component({
     selector: 'app-akcio-main',
@@ -38,7 +39,10 @@ export class AkcioMainComponent implements OnInit {
             next: (listak) => {
                 console.debug('AkcioMainComponent - Lekért akciós listák: ', listak);
                 if (listak && listak.length > 0) {
-                    this.adatServiceService.akciosListakLista.set(listak);
+                    const rendezettListak = listak.sort((a, b) => {
+                        return sortFunction(a, b, 1, 'kezdoNap', 'vegeNap', false);
+                    });
+                    this.adatServiceService.akciosListakLista.set(rendezettListak);
                     this.adatServiceService.aktulaisHetKivalasztasa();
 
                     this.adatServiceService.akcioTetelekLekereseAlap(this.fireAuthService.getToken()).subscribe({

@@ -50,7 +50,7 @@
                         <div class="tetel-sor"
                              [ngClass]="{'kivalasztott-sor': tetel.azon == kivalasztottTetel()?.azon}">
                             <div class="tetel-info"
-                                 [ngClass]="{'kiemelt-sor': tetel.kiemeltE}"
+                                 [ngClass]="{'kiemelt-sor': tetel.kiemeltE, 'mobil-info': mobilE}"
                                  (click)="tetelKijeloles(tetel)">
                                 @if (tetel.mentendo) {<span class="pi pi-save tetel-mentendo"></span>}
                                 {{tetel.nev}}
@@ -59,10 +59,10 @@
                             </div>
                             <div class="tetel-gombok">
                                 @if (!mobilE) {
-                                <div class="tetel-mod"
+                                <!-- <div class="tetel-mod"
                                      (click)="tetelModositas(tetel)">
                                     <span class="pi pi-pencil"></span>
-                                </div>
+                                </div> -->
                                 <div class="tetel-torles"
                                      (click)="tetelTorles($event, tetel)">
                                     <span class="pi pi-trash"></span>

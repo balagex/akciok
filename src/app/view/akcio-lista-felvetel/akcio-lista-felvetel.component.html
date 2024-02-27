@@ -1,10 +1,16 @@
 <div class="lista-felvetel">
     <div class="felvetel-form">
         <div class="ff-fej">
-            Intervallum megadása
+            @if (szerkesztendoListaAzon && modositandoLista()) {
+                {{modositandoLista().kezdonapForras}} - {{modositandoLista().vegeNapForras}}
+                <br>
+                intervallum módosítása
+            } @else {
+                Intervallum megadása
+            }
         </div>
         <div class="ff-intervallum">
-            <p-calendar [(ngModel)]="ujListaIntervallumDatumok"
+            <p-calendar [(ngModel)]="listaIntervallumDatumok"
                         selectionMode="range"
                         [dateFormat]="dateFormat"
                         [readonlyInput]="true"
@@ -17,15 +23,24 @@
         </div>
     </div>
     <div class="felvetel-gombok">
+        @if (!szerkesztendoListaAzon) {
         <p-button icon="pi pi-plus"
                   severity="success"
                   label="Felvétel"
                   [disabled]="!intervallumMegadott()"
                   (onClick)="ujListaFelvetele()"></p-button>
+        }
+        @if (szerkesztendoListaAzon) {
+        <p-button icon="pi pi-plus"
+                  severity="success"
+                  label="Módosítás"
+                  [disabled]="!intervallumMegadott() || listaFelvetelHiba()?.length > 0"
+                  (onClick)="listaModositasa()"></p-button>
+        }
         <p-button icon="pi pi-undo"
                   severity="warning"
                   label="Mégse"
-                  (onClick)="ujListaMegse()"></p-button>
+                  (onClick)="listaMegse()"></p-button>
 
     </div>
 </div>

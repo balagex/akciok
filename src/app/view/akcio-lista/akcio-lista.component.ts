@@ -13,7 +13,7 @@ import { NgClass } from '@angular/common';
 import { AkcioListaFelvetelComponent } from '../akcio-lista-felvetel/akcio-lista-felvetel.component';
 import { ConfirmPopup, ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
-import { doCompare, sortFunction } from '../../utils';
+import { YYYYMMDDToDate, dateToYYYYMMDD, doCompare, sortFunction } from '../../utils';
 
 @Component({
     selector: 'app-akcio-lista',
@@ -75,9 +75,17 @@ export class AkcioListaComponent {
         if (kivalasztottLista && fullLista && fullLista.length > 0) {
             const adatMap: Map<BoltAzon, Map<string, AkcioTetel[]>> = new Map<BoltAzon, Map<string, AkcioTetel[]>>();
             const rendezettAdatMap: Map<BoltAzon, Map<string, AkcioTetel[]>> = new Map<BoltAzon, Map<string, AkcioTetel[]>>();
+            const maStr = dateToYYYYMMDD(new Date());
+            const ma = YYYYMMDDToDate(maStr, 6);
+
             let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon &&
                 (this.boltSzuro().length === 0 || (this.boltSzuro().findIndex(sz => sz == tetel.boltAzon) > -1)) &&
                 (szuroSzoveg.length < 1 || (tetel.nev.indexOf(szuroSzoveg) > -1)));
+            if (this.keresoGombSzoveg() === 'Mai') {
+                hetiLista = hetiLista.filter(t => ma >= t.kezdoNap && ma <= t.vegeNap);
+            } else if (this.keresoGombSzoveg() === 'Ma+') {
+                hetiLista = hetiLista.filter(t => (ma >= t.kezdoNap && ma <= t.vegeNap) || t.kezdoNap >= ma);
+            }
             if (hetiLista?.length > 0) {
                 hetiLista.forEach(tetel => {
                     if (adatMap.has(tetel.boltAzon)) {
@@ -211,6 +219,18 @@ export class AkcioListaComponent {
             rejectButtonStyleClass: "p-button-text",
             accept: () => {
                 console.debug('AkcioListaComponent - tetelTorles OK');
+                const tetelek = this.adatServiceService.akciosTetelLista().filter(t => t.azon !== tetel.azon);
+                this.adatServiceService.akciosTetelLista.set(tetelek);
+                this.adatServiceService.kivalasztottTetel.set(null);
+                this.adatServiceService.mentendoAdatokMentese(this.fireAuthService.getToken()).subscribe({
+                    next: (mentettTetelek) => {
+                        console.debug('AkcioListaComponent - A törlés és a mentendő tételek mentése után lekért akciós tételek: ', mentettTetelek);
+                    },
+                    error: (modositasError) => {
+                        console.error('AkcioListaComponent - HIBA AZ AKCIOS TÉTELEK MÓDOSÍTÁSA SORÁN ', modositasError);
+                        // TODO: kitalálni mi legyen
+                    }
+                });
                 this.confirmationService.close();
             },
             reject: () => {

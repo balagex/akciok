@@ -52,3 +52,23 @@
         }
     }
 }
+
+
+.torles-confirm-keret {
+
+    max-width: 200px;
+    text-align: center;
+
+    .tc-uzi {
+        font-weight: 700;
+        padding: 10px 5px 0 5px;
+    }
+
+    .tc-gombok {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+}
