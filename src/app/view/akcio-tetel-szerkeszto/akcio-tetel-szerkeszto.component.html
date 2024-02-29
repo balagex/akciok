@@ -51,10 +51,18 @@
         <div class="tsz-nev">
             <div class="tszn-label">Név:</div>
             <div class="tszn-input">
+                @if (ujTetel) {
+                <p-autoComplete [(ngModel)]="tetelNev"
+                                [suggestions]="szurtNevDarabok"
+                                (completeMethod)="nevSzukites($event)"
+                                class="tszni-i"></p-autoComplete>
+                }
+                @else {
                 <input type="text"
                        pInputText
                        class="tszni-i"
                        [(ngModel)]="tetelNev" />
+                }
             </div>
         </div>
         <div class="tsz-megjegyzes">
@@ -69,7 +77,9 @@
         <div class="tsz-kiemelt">
             <div class="tszk-label">Kiemelt:</div>
             <div class="tszk-input">
-                <p-checkbox [(ngModel)]="tetelKiemeltE" [binary]="true" inputId="binary"></p-checkbox>
+                <p-checkbox [(ngModel)]="tetelKiemeltE"
+                            [binary]="true"
+                            inputId="binary"></p-checkbox>
             </div>
         </div>
     </div>

@@ -14,12 +14,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { NapValasztoComponent } from '../nap-valaszto/nap-valaszto.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { BoltAzon } from '../../model/bolt-azon.enum';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 
 
 @Component({
     selector: 'app-akcio-tetel-szerkeszto',
     standalone: true,
-    imports: [ConfirmPopupModule, ButtonModule, FormsModule, NgClass, InputTextModule, NapValasztoComponent, CheckboxModule],
+    imports: [ConfirmPopupModule, ButtonModule, FormsModule, NgClass, InputTextModule, NapValasztoComponent, CheckboxModule, AutoCompleteModule],
     providers: [ConfirmationService],
     templateUrl: './akcio-tetel-szerkeszto.component.html',
     styleUrl: './akcio-tetel-szerkeszto.component.scss'
@@ -41,6 +42,9 @@ export class AkcioTetelSzerkesztoComponent {
     tetelNev: string = null;
     tetelMegjegyzes: string = null;
     tetelKiemeltE: boolean = false;
+
+    nevDarabok: string[] = [];
+    szurtNevDarabok: string[] = [];
 
     // azon: string;
     // listaAzon: string;
@@ -110,6 +114,23 @@ export class AkcioTetelSzerkesztoComponent {
                 this.tetelKiemeltE = false;
                 this.kivalasztottBolt = null;
             }
+        });
+
+        effect(() => {
+            console.log('AkcioTetelSzerkesztoComponent - tétel lista változás ', this.adatServiceService.akciosTetelLista());
+            const darabok: Map<string, string> = new Map<string, string>();
+            this.adatServiceService.akciosTetelLista().forEach(tetel => {
+                const nevReszek: string[] = tetel.nev?.split(/\s+/);
+                if (nevReszek) {
+                    nevReszek.forEach(nd => {
+                        if (!darabok.has(nd)) {
+                            darabok.set(nd, nd);
+                        }
+                    });
+                }
+            });
+            console.debug('AkcioTetelSzerkesztoComponent - név darabok', darabok);
+            this.nevDarabok = Array.from(darabok.keys());
         });
     }
 
@@ -226,5 +247,19 @@ export class AkcioTetelSzerkesztoComponent {
             this.tetelStart = nap;
         }
 
+    }
+
+    nevSzukites(event: AutoCompleteCompleteEvent) {
+        let filtered: any[] = [];
+        let query = event.query;
+        if (this.nevDarabok) {
+            this.nevDarabok.forEach(darab => {
+                if (darab.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                    filtered.push(darab);
+                }
+            });
+        }
+
+        this.szurtNevDarabok = filtered;
     }
 }
