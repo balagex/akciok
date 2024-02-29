@@ -7,6 +7,7 @@ import { AkcioListaListaComponent } from '../akcio-lista-lista/akcio-lista-lista
 import { AkcioTetel } from '../../model/akcio-tetel.type';
 import { AkcioTetelSzerkesztoComponent } from '../akcio-tetel-szerkeszto/akcio-tetel-szerkeszto.component';
 import { sortFunction } from '../../utils';
+import { AkciosLista } from '../../model/akcios-lista.type';
 
 @Component({
     selector: 'app-akcio-main',
@@ -29,6 +30,10 @@ export class AkcioMainComponent implements OnInit {
 
     kivalasztottTetel = computed<AkcioTetel>(() => {
         return this.adatServiceService.kivalasztottTetel();
+    });
+
+    kivalasztottLista = computed<AkciosLista>(() => {
+        return this.adatServiceService.kivalasztottLista();
     });
 
     constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService) { }

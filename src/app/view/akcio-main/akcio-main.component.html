@@ -10,7 +10,16 @@
             }
         </div>
         <div class="fej-kozep fk-min ">
-            FEJ FELIRAT {{ful}}
+            @if (ful===2) {
+                Tételek
+                @if (kivalasztottLista()) { 
+                    ({{kivalasztottLista().kezdonapForras}} - {{kivalasztottLista().vegeNapForras}})
+                }
+            } @else if (ful < 2) {
+                Akciós listák
+            } @else {
+                Tétel szerkesztő
+            }
         </div>
         <div class="fej-kozep fk-max">
             AKCIÓ KEZELŐ
