@@ -13,7 +13,7 @@
             @if (ful===2) {
                 Tételek
                 @if (kivalasztottLista()) { 
-                    ({{kivalasztottLista().kezdonapForras}} - {{kivalasztottLista().vegeNapForras}})
+                    (<span (click)="nagyiModValtas()">{{kivalasztottLista().kezdonapForras}} - {{kivalasztottLista().vegeNapForras}}</span>)
                 }
             } @else if (ful < 2) {
                 Akciós listák

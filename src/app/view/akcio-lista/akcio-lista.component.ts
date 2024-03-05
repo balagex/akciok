@@ -64,6 +64,10 @@ export class AkcioListaComponent {
         return this.adatServiceService.kivalasztottTetel();
     });
 
+    nagyiMod = computed<boolean>(() => {
+        return this.adatServiceService.nagyiMod();
+    });
+
     kivalasztottListaTetelei = computed<Map<BoltAzon, Map<string, AkcioTetel[]>>>(() => {
         const kivalasztottLista = this.adatServiceService.kivalasztottLista();
         const fullLista = this.adatServiceService.akciosTetelLista();

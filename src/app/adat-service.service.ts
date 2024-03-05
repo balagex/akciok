@@ -15,6 +15,7 @@ export class AdatServiceService {
     public kivalasztottLista = signal<AkciosLista>(null);
     public akciosTetelLista = signal<AkcioTetel[]>([]);
     public kivalasztottTetel = signal<AkcioTetel>(null);
+    public nagyiMod = signal<boolean>(false);
 
     constructor(protected httpClient: HttpClient) { }
 

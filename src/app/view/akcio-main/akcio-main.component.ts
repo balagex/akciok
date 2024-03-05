@@ -19,6 +19,7 @@ import { AkciosLista } from '../../model/akcios-lista.type';
 export class AkcioMainComponent implements OnInit {
 
     public ful: number = 2;
+    public nagyiMod: boolean = false;
 
     balra(): void {
         this.ful = this.ful - 1;
@@ -75,6 +76,10 @@ export class AkcioMainComponent implements OnInit {
             }
         });
 
+    }
+
+    nagyiModValtas(): void {
+        this.adatServiceService.nagyiMod.update(currval => !currval);
     }
 
 }
