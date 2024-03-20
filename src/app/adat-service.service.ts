@@ -5,6 +5,7 @@ import { AkciosListaIF } from './model/akcios-lista.interface';
 import { Observable, map } from 'rxjs';
 import { AkciosLista } from './model/akcios-lista.type';
 import { AkcioTetel } from './model/akcio-tetel.type';
+import { dateToYYYYMMDD } from './utils';
 
 @Injectable({
     providedIn: 'root'
@@ -75,8 +76,8 @@ export class AdatServiceService {
     }
 
     aktulaisHetKivalasztasa(): void {
-        const most = new Date();
-        const ezAHet = this.akciosListakLista().find(value => value.kezdoNap <= most && value.vegeNap >= most);
+        const maStr = dateToYYYYMMDD(new Date());
+        const ezAHet = this.akciosListakLista().find(value => value.kezdonapForras <= maStr && value.vegeNapForras >= maStr);
         if (ezAHet) {
             this.kivalasztottLista.set(ezAHet);
 
