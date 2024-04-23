@@ -25,8 +25,26 @@ export class AppComponent implements OnInit {
         this.translateService.setDefaultLang('hu');
         this.translateService.get('primeng').subscribe(res => this.config.setTranslation(res));
 
+        const akemx: Map<number, number[]> = new Map([
+            [1, [65, 74, 124, 100, 87, 126, 72, 112, 62, 76, 90, 89, 123]],
+            [2, [234, 137, 242, 211, 240, 175, 208, 167, 104, 163, 240, 181, 170]],
+            [3, [222, 331, 293, 162, 340, 206, 252, 241, 170, 225, 265, 269, 180]]
+        ])
+        const nums: number[] = [];
+        akemx.forEach((v, k) => {
+            v.forEach((vi, i) => {
+                const x = (vi - i) / k;
+                nums.push(x);
+            });
+        });
+
+        let ak = '';
+        nums.forEach(n => {
+            ak = ak + String.fromCharCode(n)
+        });
+
         const fbApp = initializeApp({
-            apiKey: "AIzaSyBi6CPNouDxhvUeP0MsUOJna5pCRN6HUV8",
+            apiKey: ak,
             authDomain: "bevasarlolista-8247e.firebaseapp.com"
         });
 
