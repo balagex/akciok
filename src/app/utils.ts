@@ -85,11 +85,16 @@ export function doCompare(a: any, b: any, direction: number, useLocalCompare: bo
 
 export function sortFunction(a: any, b: any, direction: number, property: string, property2: string, useLocalCompareArg?: boolean): number {
     const useLocalCompare = useLocalCompareArg ? useLocalCompareArg : false;
-    const res1 = doCompare(a[property], b[property], direction, useLocalCompare);
-    if (res1 === 0 && property2 != null) {
-        const res2 = doCompare(a[property2], b[property2], direction, useLocalCompare);
-        return res2;
+    if (!property) {
+        const res3 = doCompare(a, b, direction, useLocalCompare);
+        return res3;
     } else {
-        return res1;
+        const res1 = doCompare(a[property], b[property], direction, useLocalCompare);
+        if (res1 === 0 && property2 != null) {
+            const res2 = doCompare(a[property2], b[property2], direction, useLocalCompare);
+            return res2;
+        } else {
+            return res1;
+        }
     }
 }

@@ -84,7 +84,7 @@ export class AkcioListaComponent {
 
             let hetiLista = this.adatServiceService.akciosTetelLista().filter(tetel => tetel.listaAzon == kivalasztottLista.azon &&
                 (this.boltSzuro().length === 0 || (this.boltSzuro().findIndex(sz => sz == tetel.boltAzon) > -1)) &&
-                (szuroSzoveg.length < 1 || (tetel.nev.indexOf(szuroSzoveg) > -1)));
+                (szuroSzoveg.length < 1 || (tetel.nev.toLowerCase().indexOf(szuroSzoveg.toLowerCase()) > -1)));
             if (this.keresoGombSzoveg() === 'Mai') {
                 hetiLista = hetiLista.filter(t => ma >= t.kezdoNap && ma <= t.vegeNap);
             } else if (this.keresoGombSzoveg() === 'Ma+') {

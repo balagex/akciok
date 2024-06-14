@@ -1,4 +1,4 @@
-import { Component, Input, computed, effect } from '@angular/core';
+import { Component, Input, computed, effect, signal } from '@angular/core';
 import { AdatServiceService } from '../../adat-service.service';
 import { FireAuthService } from '../../fire-auth.service';
 import { ConfirmationService } from 'primeng/api';
@@ -6,7 +6,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ButtonModule } from 'primeng/button';
 import { AkciosLista } from '../../model/akcios-lista.type';
 import { AkcioTetel } from '../../model/akcio-tetel.type';
-import { dateToYYYYMMDD, intervallDates, napRovidites } from '../../utils';
+import { dateToYYYYMMDD, intervallDates, napRovidites, sortFunction } from '../../utils';
 import { BOLTOK } from '../../common.constants';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -45,6 +45,8 @@ export class AkcioTetelSzerkesztoComponent {
 
     nevDarabok: string[] = [];
     szurtNevDarabok: string[] = [];
+    mentendoNevek: string[] = [];
+    ujNev = signal<string>('');
 
     // azon: string;
     // listaAzon: string;
@@ -71,10 +73,13 @@ export class AkcioTetelSzerkesztoComponent {
         return tetelek && tetelek.length > 0 && tetelek.findIndex(t => t.mentendo) > -1;
     });
 
+    nevlistaSzerkesztendo: boolean = false;
+
     constructor(private adatServiceService: AdatServiceService, private fireAuthService: FireAuthService, private confirmationService: ConfirmationService) {
 
         effect(() => {
             console.log('AkcioTetelSzerkesztoComponent - kivalasztottLista változás ', this.adatServiceService.kivalasztottLista());
+            this.nevlistaSzerkesztendo = false;
             if (this.adatServiceService.kivalasztottLista()) {
                 this.intervallumStart = this.adatServiceService.kivalasztottLista().kezdoNap;
                 this.intervallumEnd = this.adatServiceService.kivalasztottLista().vegeNap;
@@ -91,6 +96,7 @@ export class AkcioTetelSzerkesztoComponent {
 
         effect(() => {
             console.log('AkcioTetelSzerkesztoComponent - kivalasztottTetel változás ', this.adatServiceService.kivalasztottTetel());
+            this.nevlistaSzerkesztendo = false;
             if (this.adatServiceService.kivalasztottTetel()) {
                 this.tetelStart = this.adatServiceService.kivalasztottTetel().kezdoNap;
                 this.tetelEnd = this.adatServiceService.kivalasztottTetel().vegeNap;
@@ -117,23 +123,90 @@ export class AkcioTetelSzerkesztoComponent {
         });
 
         effect(() => {
-            console.log('AkcioTetelSzerkesztoComponent - tétel lista változás ', this.adatServiceService.akciosTetelLista());
-            const darabok: Map<string, string> = new Map<string, string>();
-            this.adatServiceService.akciosTetelLista().forEach(tetel => {
-                const nevReszek: string[] = tetel.nev?.split(/\s+/);
-                if (nevReszek) {
-                    nevReszek.forEach(nd => {
-                        if (!darabok.has(nd)) {
-                            darabok.set(nd, nd);
-                        }
-                    });
-                }
-            });
-            console.debug('AkcioTetelSzerkesztoComponent - név darabok', darabok);
-            this.nevDarabok = Array.from(darabok.keys());
+            console.log('AkcioTetelSzerkesztoComponent - tétel lista vagy név lista változás ', this.adatServiceService.akciosTetelLista(), this.adatServiceService.akcioTetelNevLista());
+            this.nevDarabokBeallitasa();
         });
     }
 
+    nevDarabokBeallitasa(): void {
+        const darabok: Map<string, string> = new Map<string, string>();
+        this.adatServiceService.akciosTetelLista().forEach(tetel => {
+            const nevReszek: string[] = tetel.nev?.split(/\s+/);
+            if (nevReszek) {
+                nevReszek.forEach(nd => {
+                    if (isNaN(+nd)) {
+                        if (!darabok.has(nd)) {
+                            darabok.set(nd, nd);
+                        }
+                    } else {
+                        // console.debug('AkcioTetelSzerkesztoComponent - ez a darab szám, nem kő', nd);
+                    }
+                });
+            }
+        });
+        this.adatServiceService.akcioTetelNevLista().forEach(nev => {
+            if (!darabok.has(nev)) {
+                darabok.set(nev, nev);
+            }
+        });
+        console.debug('AkcioTetelSzerkesztoComponent - név darabok', darabok);
+        this.nevDarabok = Array.from(darabok.keys());
+    }
+
+    nevlistaSzerkesztendoInditas(): void {
+        this.mentendoNevek = [];
+        this.adatServiceService.akcioTetelNevLista().sort((a, b) => {
+            return sortFunction(a, b, 1, null, null, true);
+        }).forEach(nev => this.mentendoNevek.push(nev));
+        this.nevlistaSzerkesztendo = true;
+    }
+
+    tetelNevekSorban(): string[] {
+        const rendezettLista = this.mentendoNevek.sort((a, b) => {
+            return sortFunction(a, b, 1, null, null, true);
+        });
+        return rendezettLista;
+    }
+
+    nevlistaSzerkesztesMegszakitasa(): void {
+        this.mentendoNevek = [];
+        this.nevlistaSzerkesztendo = false;
+        this.nevDarabokBeallitasa();
+    }
+
+    nevDarabTorles(event: any, nev: string) {
+        if (nev) {
+            this.mentendoNevek = this.mentendoNevek.filter(n => n !== nev);
+        }
+        console.debug('AkcioTetelSzerkesztoComponent - név darab törlés', nev, this.mentendoNevek);
+    }
+
+    nevDarabFelvetel(): void {
+        if (this.ujNev() && this.mentendoNevek.indexOf(this.ujNev()) < 0) {
+            this.mentendoNevek.push(this.ujNev());
+            this.ujNev.set('');
+            console.debug('AkcioTetelSzerkesztoComponent - név darab felvehető', this.ujNev(), this.mentendoNevek);
+        } else {
+            console.debug('AkcioTetelSzerkesztoComponent - név darab már benne van a listában', this.ujNev(), this.mentendoNevek);
+        }
+    }
+
+    ujNevMarLetezikE(): boolean {
+        return !(this.ujNev() && this.mentendoNevek.indexOf(this.ujNev()) < 0);
+    }
+
+    nevlistaMentes(): void {
+        this.nevlistaSzerkesztendo = false;
+        this.adatServiceService.akcioTetelNevekMentese(this.mentendoNevek, this.fireAuthService.getToken()).subscribe({
+            next: (valasz) => {
+                console.debug('AkcioTetelSzerkesztoComponent - Név lista mentés sikeres', valasz);
+                this.adatServiceService.akcioTetelNevLista.set(valasz);
+            },
+            error: (mentesError) => {
+                console.error('AkcioTetelSzerkesztoComponent - Hiba a név lista mentés során! ', mentesError);
+            }
+        });
+    }
 
     ujTetelFelvetelInditas(bolt: BoltAzon, start: Date, end: Date): void {
         const ujTetel: AkcioTetel = new AkcioTetel();
@@ -254,7 +327,7 @@ export class AkcioTetelSzerkesztoComponent {
         let query = event.query;
         if (this.nevDarabok) {
             this.nevDarabok.forEach(darab => {
-                if (darab.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                if (darab.toLowerCase().indexOf(query.toLowerCase()) > -1) {
                     filtered.push(darab);
                 }
             });
@@ -262,4 +335,5 @@ export class AkcioTetelSzerkesztoComponent {
 
         this.szurtNevDarabok = filtered;
     }
+
 }

@@ -17,8 +17,26 @@ export class AdatServiceService {
     public akciosTetelLista = signal<AkcioTetel[]>([]);
     public kivalasztottTetel = signal<AkcioTetel>(null);
     public nagyiMod = signal<boolean>(false);
+    public akcioTetelNevLista = signal<string[]>([]);
 
     constructor(protected httpClient: HttpClient) { }
+
+    akcioTetelNevekLekereseAlap(token: string): Observable<string[]> {
+        this.kivalasztottTetel.set(null);
+        return this.httpClient.get<string[]>('https://bevasarlolista-8247e.firebaseio.com/akcioTetelNevek.json?auth=' + token, {
+            observe: 'body',
+            responseType: 'json'
+        }); //.pipe(map(response => AkciosLista.convertFromIfList(response)));
+    }
+
+    akcioTetelNevekMentese(nevek: string[], token: string): Observable<string[]> {
+        return this.httpClient.put<string[]>('https://bevasarlolista-8247e.firebaseio.com/akcioTetelNevek.json?auth=' + token,
+            nevek,
+            {
+                observe: 'body',
+                responseType: 'json'
+            });
+    }
 
     akciosListakLekereseAlap(token: string): Observable<AkciosLista[]> {
         this.kivalasztottTetel.set(null);

@@ -3,7 +3,7 @@
         <p-button icon="pi pi-plus"
                   severity="success"
                   label="Új tétel adatok megadása"
-                  (onClick)="ujTetelFelvetelInditas(null,null,null)"
+                  (onClick)="ujTetelFelvetelInditas(kivalasztottBolt ? kivalasztottBolt.id : null,null,null)"
                   [disabled]="kivalasztottLista() == null"></p-button>
         @if (vanMentendoTetel()) {
         <p-button icon="pi pi-save"
@@ -12,8 +12,64 @@
                   (onClick)="mentendoAdatokMentese()"
                   [disabled]="kivalasztottLista() == null"></p-button>
         }
+        @else {
+        <p-button icon="pi pi-pencil"
+                  severity="info"
+                  label="Névlista szerkesztő"
+                  (onClick)="nevlistaSzerkesztendoInditas()"></p-button>
+        }
     </div>
-    @if (kivalasztottTetel()) {
+    @if (nevlistaSzerkesztendo){
+    <div class="nlsz-torzs">
+        <div class="nlsz-fej">
+            <p-button icon="pi pi-undo"
+                      severity="warning"
+                      label="Megszakítás"
+                      (onClick)="nevlistaSzerkesztesMegszakitasa()">
+            </p-button>
+            <p-button icon="pi pi-save"
+                      severity="success"
+                      label="Lista mentése"
+                      (onClick)="nevlistaMentes()">
+            </p-button>
+        </div>
+        <div class="nlsz-lista">
+            @for (nev of tetelNevekSorban(); track $index) {
+            <div class="nlsz-nev-sor">
+                <div class="nlsz-nev-sor-tartalom">
+                    <div class="nlsz-nev-torles">
+                        <p-button icon="pi pi-trash"
+                                  severity="danger"
+                                  [rounded]="true"
+                                  [text]="true"
+                                  (onClick)="nevDarabTorles($event, nev)">
+                        </p-button>
+                    </div>
+                    <div class="nlsz-nev-nev">
+                        {{nev}}
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        <div class="nlsz-felvetel">
+            <div class="nlsz-f-input">
+                <input type="text"
+                       pInputText
+                       [ngModel]="ujNev()"
+                       (ngModelChange)="ujNev.set($event)" />
+            </div>
+            <div class="nlsz-f-gomb">
+                <p-button size="small"
+                          [label]="'Új név'"
+                          (onClick)="nevDarabFelvetel()"
+                          [disabled]=" ujNevMarLetezikE()">
+                </p-button>
+            </div>
+        </div>
+    </div>
+    }
+    @if (kivalasztottTetel() && !nevlistaSzerkesztendo) {
     <div class="tsz-torzs">
         @if (mobilE && intervallumStr) {
         <div class="tsz-lista-intervallum">Lista intervaluma: {{intervallumStr}}</div>

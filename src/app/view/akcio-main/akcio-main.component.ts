@@ -41,12 +41,24 @@ export class AkcioMainComponent implements OnInit {
 
     ngOnInit() {
 
+        this.adatServiceService.akcioTetelNevekLekereseAlap(this.fireAuthService.getToken()).subscribe({
+            next: (nevek) => {
+                console.debug('AkcioMainComponent - Lekért nevekk: ', nevek);
+                this.adatServiceService.akcioTetelNevLista.set(nevek);
+            },
+            error: (nevListaError) => {
+                console.error('AkcioMainComponent - NÉV LISTA LEKERES HIBA ', nevListaError);
+                this.fireAuthService.logout();
+            }
+        });
+
+
         this.adatServiceService.akciosListakLekereseAlap(this.fireAuthService.getToken()).subscribe({
             next: (listak) => {
                 console.debug('AkcioMainComponent - Lekért akciós listák: ', listak);
                 if (listak && listak.length > 0) {
                     const rendezettListak = listak.sort((a, b) => {
-                        return sortFunction(a, b, 1, 'kezdoNap', 'vegeNap', false);
+                        return sortFunction(a, b, -1, 'kezdoNap', 'vegeNap', false);
                     });
                     this.adatServiceService.akciosListakLista.set(rendezettListak);
                     this.adatServiceService.aktulaisHetKivalasztasa();

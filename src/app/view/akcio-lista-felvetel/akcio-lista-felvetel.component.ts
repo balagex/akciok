@@ -44,7 +44,7 @@ export class AkcioListaFelvetelComponent {
                 next: (listak) => {
                     console.debug('AkcioListaFelvetelComponent - A felvétel után lekért akciós listák: ', listak);
                     const rendezettListak = listak.sort((a, b) => {
-                        return sortFunction(a, b, 1, 'kezdoNap', 'vegeNap', false);
+                        return sortFunction(a, b, -1, 'kezdoNap', 'vegeNap', false);
                     });
                     this.adatServiceService.akciosListakLista.set(rendezettListak);
                     const mentettUjLista = this.adatServiceService.akciosListakLista().find(value => value.azon == ujLista.azon);
@@ -82,7 +82,7 @@ export class AkcioListaFelvetelComponent {
                     next: (listak) => {
                         console.debug('AkcioListaFelvetelComponent - A módosítás után lekért akciós listák: ', listak);
                         const rendezettListak = listak.sort((a, b) => {
-                            return sortFunction(a, b, 1, 'kezdoNap', 'vegeNap', false);
+                            return sortFunction(a, b, -1, 'kezdoNap', 'vegeNap', false);
                         });
                         this.adatServiceService.akciosListakLista.set(rendezettListak);
                         const mentettModositotLista = this.adatServiceService.akciosListakLista().find(value => value.azon == modositandoLista.azon);
